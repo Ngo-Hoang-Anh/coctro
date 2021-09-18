@@ -19,25 +19,40 @@ const LoginPage = () => {
         console.log(values);
         axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
         axios.get(`https://zip9ffa7ll.execute-api.ap-southeast-1.amazonaws.com/Stage/hello`)
-        .then(res => {
-          console.log("Res:"+res);
-        })
+            .then(res => {
+                console.log("Res:" + res);
+            })
     };
 
     return (
-        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
-            <Form.Item name="email" label="Email" rules={[{ required: true }]}>
-                <Input prefix={<UserOutlined />} placeholder="Tên đăng nhập" />
-            </Form.Item>
-            <Form.Item name="password" label="Password" rules={[{ required: true }]}>
-                <Input prefix={<LockOutlined />} placeholder="Mật khẩu" type="password" />
-            </Form.Item>
-            <Form.Item {...tailLayout}>
-                <Button type="primary" htmlType="submit">
-                    Submit
-                </Button>
-            </Form.Item>
-        </Form>
+        <>
+            <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+                <Form.Item name="email" label="Email" rules={[{ required: true }]}>
+                    <Input prefix={<UserOutlined />} placeholder="Tên đăng nhập" />
+                </Form.Item>
+                <Form.Item name="password" label="Password" rules={[{ required: true }]}>
+                    <Input prefix={<LockOutlined />} placeholder="Mật khẩu" type="password" />
+                </Form.Item>
+                <Form.Item {...tailLayout}>
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </Form.Item>
+            </Form>
+            <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+                <Form.Item name="email" label="Email" rules={[{ required: true }]}>
+                    <Input prefix={<UserOutlined />} placeholder="Tên đăng nhập" />
+                </Form.Item>
+                <Form.Item name="password" label="Password" rules={[{ required: true }]}>
+                    <Input prefix={<LockOutlined />} placeholder="Mật khẩu" type="password" />
+                </Form.Item>
+                <Form.Item {...tailLayout}>
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </Form.Item>
+            </Form>
+        </>
     );
 }
 export default LoginPage;
