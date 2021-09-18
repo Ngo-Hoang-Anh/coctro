@@ -32,6 +32,9 @@ const LoginPage = () => {
             <Form.Item name="password" label="Password" rules={[{ required: true }]}>
                 <Input prefix={<LockOutlined />} placeholder="Mật khẩu" type="password" />
             </Form.Item>
+            <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+                <Input prefix={<LockOutlined />} placeholder="Ten" type="password" />
+            </Form.Item>
             <Form.Item {...tailLayout}>
                 <Button type="primary" htmlType="submit">
                     Submit
