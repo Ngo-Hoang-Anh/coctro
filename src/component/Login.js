@@ -1,8 +1,7 @@
-import { Form, Input, Button, Select } from 'antd';
+import { Form, Input, Button, Result } from 'antd';
 
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import axios from 'axios';
-const { Option } = Select;
+import { URLpath, sendRequest } from '../common/utility';
 
 const layout = {
     labelCol: { span: 8 },
@@ -11,21 +10,29 @@ const layout = {
 const tailLayout = {
     wrapperCol: { offset: 8, span: 8 },
 };
-
-
 const LoginPage = () => {
     const [form] = Form.useForm();
-    const onFinish = (values) => {//call api here
+    const onLogin = (values) => {//call api here
         console.log(values);
-        axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-        axios.get(`https://zip9ffa7ll.execute-api.ap-southeast-1.amazonaws.com/Stage/hello`)
-        .then(res => {
-          console.log("Res:"+res);
-        })
-    };
+        const testURL = URLpath + '/login';
+        const myInit = {
+            method: 'POST',
+            body: JSON.stringify({
+                email: values.email,
+                password: values.password,
+            }),
+        }
+        sendRequest(testURL, myInit)
+            .then(result => {
+                console.log("result:");
+                console.log(result);
+            }
+            );;
+
+    }
 
     return (
-        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+        <Form {...layout} form={form} name="control-hooks" onFinish={onLogin}>
             <Form.Item name="email" label="Email" rules={[{ required: true }]}>
                 <Input prefix={<UserOutlined />} placeholder="Tên đăng nhập" />
             </Form.Item>
@@ -34,10 +41,12 @@ const LoginPage = () => {
             </Form.Item>
             <Form.Item {...tailLayout}>
                 <Button type="primary" htmlType="submit">
-                    Submit
+                    Login
                 </Button>
             </Form.Item>
         </Form>
     );
 }
+
+
 export default LoginPage;
