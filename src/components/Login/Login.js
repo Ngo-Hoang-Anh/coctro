@@ -10,7 +10,8 @@ const Login = () => {
   };
 
   return (
-    <Form
+    <div className="container-form-login">
+      <Form
       name="normal_login"
       className="login-form"
       initialValues={{
@@ -57,6 +58,7 @@ const Login = () => {
         Or <a href="">register now!</a>
       </Form.Item>
     </Form>
+    </div>
   );
 };
 
