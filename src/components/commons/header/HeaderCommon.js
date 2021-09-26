@@ -26,9 +26,6 @@ function HeaderCommon(props) {
             <Menu.Item key="login">
               <Link to="/login">Đăng nhập</Link>
             </Menu.Item>
-            <Menu.Item key="register">
-              <Link to="/register">Đăng kí</Link>
-            </Menu.Item>
           </Menu>
 
           <Switch>

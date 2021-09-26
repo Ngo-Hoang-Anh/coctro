@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Form, Input, Button, Checkbox } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { Form, Input, Button } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import { URLpath, sendRequest } from '../../common/utility';
 
 const Register = () => {

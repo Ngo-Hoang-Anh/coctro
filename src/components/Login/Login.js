@@ -1,10 +1,12 @@
 import React from "react";
 import "./Login.css";
+import { useHistory } from "react-router-dom";
 
 import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { URLpath, sendRequest } from '../../common/utility';
 const Login = () => {
+  let history = useHistory();
   const onFinish = (values) => {
     const testURL = URLpath + '/login';
     const myInit = {
@@ -14,13 +16,12 @@ const Login = () => {
         password: values.password,
       }),
     }
-    sendRequest(testURL, myInit)
-      .then(result => {
-        console.log("result:");
-        console.log(result);
-      }
-      );;
-  };
+    sendRequest(testURL, myInit).then((result) => {
+      window.localStorage.setItem("token", result.token);
+      console.log(window.localStorage.getItem("token"));
+    })
+      .then(history.push("/home"));
+  }
 
   return (
     <div className="container-form-login">
