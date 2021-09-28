@@ -2,10 +2,13 @@ export const URLpath = 'https://5bs7906zqb.execute-api.ap-southeast-1.amazonaws.
 export async function sendRequest(URL, init) {
     const myRequest = new Request(URL, init);
     let result = await fetch(myRequest)
-        .then(data => {
-            return data.json();
-        }
-        )
+        .then((response) => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                return response.text();
+            }
+        })
     return result;
 }
 

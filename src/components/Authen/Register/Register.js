@@ -2,9 +2,11 @@ import React from "react";
 
 import { Form, Input, Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { URLpath, sendRequest } from '../../common/utility';
+import { URLpath, sendRequest } from '../../../common/utility';
+import { useHistory } from "react-router-dom";
 
 const Register = () => {
+  let history = useHistory();
   const onFinish = (values) => {
     //TODO: validate
     const testURL = URLpath + '/register';
@@ -13,12 +15,18 @@ const Register = () => {
       body: JSON.stringify({
         email: values.email,
         password: values.password,
+        fullName: values.fullName,
+        phone: values.phone
       }),
     }
     sendRequest(testURL, myInit)
       .then(result => {
-        console.log("result:");
-        console.log(result);
+        if (result.error == null) {
+          window.alert("New account created successfully");
+          history.push("/login");
+        } else {
+          window.alert(result.error);
+        }
       }
       );;
   };
@@ -35,13 +43,35 @@ const Register = () => {
           rules={[
             {
               required: true,
-              message: 'Hãy nhập email!',
+              type: 'email',
+              message: 'Hãy nhập email hợp lệ!',
             },
           ]}
         >
           <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
         </Form.Item>
-
+        <Form.Item
+          name="fullName"
+          rules={[
+            {
+              required: true,
+              message: 'Hãy nhập họ và tên!',
+            },
+          ]}
+        >
+          <Input placeholder="Họ và Tên" />
+        </Form.Item>
+        <Form.Item
+          name="phone"
+          rules={[
+            {
+              required: true,
+              message: 'Hãy nhập số điện thoại!',
+            },
+          ]}
+        >
+          <Input placeholder="Số điện thoại" />
+        </Form.Item>
         <Form.Item
           name="password"
           rules={[

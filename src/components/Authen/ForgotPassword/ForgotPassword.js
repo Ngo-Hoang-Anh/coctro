@@ -1,47 +1,48 @@
 import React, { useState } from "react";
 import { Form, Input, Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { URLpath, sendRequest } from '../../common/utility';
+import { URLpath, sendRequest } from './../../../common/utility';
+import { useHistory } from "react-router-dom";
 
 function ForgotPassword(props) {
+    let history = useHistory();
     const [currentEmail, setCurrentEmail] = useState(null);
     const sendToEmail = (values) => {
         //TODO: validate
-        const testURL = URLpath + '/forgot';
+        const testURL = URLpath + '/forgot-password';
         const myInit = {
             method: 'POST',
             body: JSON.stringify({
                 email: values.email
             }),
         }
-        // sendRequest(testURL, myInit)
-        //     .then(result => {
-        //         console.log("result:");
-        //         console.log(result);
-        //     }
-        //     );;
-        // TODO: waiting for response
+        props.setIsProgressing(true);
         setCurrentEmail(values.email);
+        sendRequest(testURL, myInit).then((result) => {
+            if (result.error == null) {
+                // setCurrentEmail(values.email);
+            } else {
+                window.alert(result.error);
+            }
+            setTimeout(() => props.setIsProgressing(false), 2000);
+        });
     };
     const confirmOTP = (values) => {
-        const testURL = URLpath + '/confirmChangePassword';
+        console.log("this shit is running");
+        const testURL = URLpath + '/change-password';
         const myInit = {
             method: 'POST',
             body: JSON.stringify({
                 email: currentEmail,
-                password: values.password,
-                OTP: values.otp
+                newPassword: values.password,
+                otp: values.otp
             }),
         }
-        console.log(myInit.body);
-        // sendRequest(testURL, myInit)
-        //     .then(result => {
-        //         console.log("result:");
-        //         console.log(result);
-        //     }
-        //     );;
-        // TODO: waiting for response,redirect to login
-
+        sendRequest(testURL, myInit)
+            .then(result => {
+                console.log(result);
+            }
+            );;
     }
 
     return (<>
@@ -56,8 +57,9 @@ function ForgotPassword(props) {
                         name="email"
                         rules={[
                             {
+                                type: "email",
                                 required: true,
-                                message: 'Hãy nhập email!',
+                                message: 'Hãy nhập email hợp lệ!',
                             },
                         ]}
                     >
@@ -72,7 +74,6 @@ function ForgotPassword(props) {
                 ://if there are email, waiting for OTP
                 <>
                     <p>Mã OTP đã đƯợc gửi về email <b>{currentEmail}</b>. Hãy nhập mã OTP và mật khẩu mới.</p>
-
                     <Form
                         name="confirmOTP"
                         className="login-form"

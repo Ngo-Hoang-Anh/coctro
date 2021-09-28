@@ -1,0 +1,21 @@
+.progress-bar {
+  .bar {
+    height: 5px;
+    > div {
+      height: 5px;
+      position: absolute;
+    }
+
+    > div:first-of-type {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+      left: 0;
+    }
+
+    > div:last-of-type {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      right: 0;
+    }
+  }
+}

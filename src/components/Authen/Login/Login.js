@@ -4,10 +4,10 @@ import { useHistory } from "react-router-dom";
 
 import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { URLpath, sendRequest } from '../../common/utility';
-const Login = () => {
+import { URLpath, sendRequest } from '../../../common/utility';
+const Login = (props) => {
   let history = useHistory();
-  const onFinish = (values) => {
+  function onFinish(values) {
     const testURL = URLpath + '/login';
     const myInit = {
       method: 'POST',
@@ -16,11 +16,20 @@ const Login = () => {
         password: values.password,
       }),
     }
+
+    props.setIsProgressing(true);
     sendRequest(testURL, myInit).then((result) => {
-      window.localStorage.setItem("token", result.token);
-      console.log(window.localStorage.getItem("token"));
-    })
-      .then(history.push("/home"));
+      console.log("error:" + result.error);
+      if (result.error == null) {
+        window.localStorage.setItem("token", result.token);
+        props.setToken(result.token);
+        history.push("/home");
+      } else {
+        window.alert(result.error);
+      }
+      setTimeout(() => props.setIsProgressing(false), 2000);
+    });
+    //set time out for testing purpose
   }
 
   return (
@@ -38,7 +47,8 @@ const Login = () => {
           rules={[
             {
               required: true,
-              message: 'Hãy nhập email!',
+              type: 'email',
+              message: 'Hãy nhập email hợp lệ!',
             },
           ]}
         >
