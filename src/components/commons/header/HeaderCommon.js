@@ -5,7 +5,7 @@ import { TwitterOutlined } from "@ant-design/icons";
 import "./Header.css";
 
 const Login = React.lazy(() => import('../../Authen/Login/Login'));
-const CreatePostPage = React.lazy(() => import('../../Post/CreatePost/CreatePost'));
+const UploadImage = React.lazy(() => import('../../Post/CreatePost/UploadImage'));
 const ProgressBar = React.lazy(() => import('../ProgressBar/ProgressBar'));
 const Register = React.lazy(() => import('../../Authen/Register/Register'));
 const ForgotPassword = React.lazy(() => import('../../Authen/ForgotPassword/ForgotPassword'));
@@ -58,8 +58,8 @@ function HeaderCommon(props) {
               <Menu.Item key="createNewPost" style={{ display: "inline-flex" }}>
                 <Link to="/create-new-post">Tạo bài đăng</Link>
               </Menu.Item>
-              <Menu.Item key="createPost" style={{ display: "inline-flex" }}>
-                <Link to="/create-post">Tạo Post</Link>
+              <Menu.Item key="imageTest" style={{ display: "inline-flex" }}>
+                <Link to="/imageTest">Up Ảnh</Link>
               </Menu.Item>
             </Divider >
             <Divider orientation="right">
@@ -77,7 +77,7 @@ function HeaderCommon(props) {
             <section>
               <Switch>
                 <Route path="/home" component={Home} />
-                <Route path="/create-post" component={CreatePostPage} />
+                <Route path="/imageTest" component={UploadImage} />
                 <Route path="/login" render={() => (
                   <Login
                     setIsProgressing={setIsProgressing}
@@ -94,7 +94,7 @@ function HeaderCommon(props) {
                     setIsProgressing={setIsProgressing}
                   />
                 )} />
-                
+
                 <Route path="/create-new-post" component={Post} />
                 <Route path="/:somestring" component={Error} />
               </Switch>

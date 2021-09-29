@@ -4,11 +4,12 @@ import { useHistory } from "react-router-dom";
 
 import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { URLpath, sendRequest } from '../../../common/utility';
+import { sendRequest } from '../../../common/utility';
+
 const Login = (props) => {
   let history = useHistory();
   function onFinish(values) {
-    const testURL = URLpath + '/login';
+    const path = '/login';
     const myInit = {
       method: 'POST',
       body: JSON.stringify({
@@ -18,9 +19,9 @@ const Login = (props) => {
     }
 
     props.setIsProgressing(true);
-    sendRequest(testURL, myInit).then((result) => {
-      console.log("error:" + result.error);
-      if (result.error == null) {
+    sendRequest(path, myInit).then((result) => {
+      console.log(typeof (result.error));
+      if (result.error == undefined) {
         window.localStorage.setItem("token", result.token);
         props.setToken(result.token);
         history.push("/home");
@@ -34,6 +35,7 @@ const Login = (props) => {
 
   return (
     <div className="container-form-login">
+      <img src="https://fptu-house-bucket.s3.ap-southeast-1.amazonaws.com/Avalkein.png" alt="" />
       <Form
         name="normal_login"
         className="login-form"

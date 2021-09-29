@@ -1,20 +1,10 @@
 import React, { useState } from "react";
-
-import {
-  Form,
-  Input,
-  InputNumber,
-  Cascader,
-  Select,
-  Row,
-  Col,
-  Checkbox,
-  Button,
-  AutoComplete,
-  Radio,
-} from "antd";
+import { sendRequest } from '../../../common/utility';
+import { useHistory } from "react-router-dom";
+import { Form, Input, InputNumber, Cascader, Select, Checkbox, Button, Radio } from "antd";
 
 function Post(props) {
+  let history = useHistory();
   const { Option } = Select;
   const { TextArea } = Input;
   const residences = [
@@ -92,17 +82,16 @@ function Post(props) {
   );
 
   //Post Type - Start
-  const [postType, setPostType] = React.useState("");
-
+  const [postType, setPostType] = useState("");
   const valuePostType = ["Tìm ở ghép", "Cho thuê trọ"];
-
+  const [priceUnit, setPriceUnit] = useState("Giá cho thuê:");
   const onChangePostType = (e) => {
     setPostType(e.target.value);
   };
   //Post Type - End
 
   //Room Type - Start
-  const [roomType, setRoomType] = React.useState("");
+  const [roomType, setRoomType] = useState("");
 
   const valueRoomType = [
     "Ký túc xá",
@@ -112,20 +101,30 @@ function Post(props) {
   ];
 
   const onChangeRoomType = (e) => {
-    setRoomType(e.target.value);
+    let value = e.target.value;
+    setRoomType(value);
+    if (value === "Ký túc xá") {
+      setPriceUnit("Giá cho thuê (đơn vị:VND/người)");
+    } else if (value === "Phòng trọ cho thuê") {
+      setPriceUnit("Giá cho thuê (đơn vị: VND/phòng)");
+    } else if (value === "Nhà nguyên căn" || value === "Chung cư mini") {
+      setPriceUnit("Giá cho thuê (đơn vị: VND/căn)");
+    } else {
+      setPriceUnit("Giá cho thuê:");
+    }
   };
   //Room Type - End
 
   //Number Room Available - Start
-  function onChangeNumberRoomAvaiable(value) {}
+  function onChangeNumberRoomAvaiable(value) { }
   //Number Room Available - End
 
   //Number Person Per Room - Start
-  function onChangeNumberPersonPerRoom(value) {}
+  function onChangeNumberPersonPerRoom(value) { }
   //Number Person Per Room - End
 
   //Gender - Start
-  const [gender, setGender] = React.useState("");
+  const [gender, setGender] = useState("");
 
   const valueGender = ["Tất cả", "Nam", "Nữ"];
 
@@ -136,47 +135,91 @@ function Post(props) {
 
   //Utilities - Start
   const utilities = [
-    "WC riêng",
-    "Cửa sổ",
-    "Chủ riêng",
-    "Bình nóng lạnh",
-    "Tủ lạnh",
-    "Gác lửng",
-    "Tủ đồ",
-    "Thú cưng",
-    "Bảo vệ",
-    "Camera an ninh",
-    "Điều hoà",
-    "Nhà bếp",
-    "Máy giặt",
-    "Giường",
-    "Tivi",
-    "Ban công",
+    { label: "WC riêng", value: "WC riêng" },
+    { label: "Cửa sổ", value: "Cửa sổ" },
+    { label: "Chủ riêng", value: "Chủ riêng" },
+    { label: "Bình nóng lạnh", value: "Bình nóng lạnh" },
+    { label: "Tủ lạnh", value: "Tủ lạnh" },
+    { label: "Gác lửng", value: "Gác lửng" },
+    { label: "Tủ đồ", value: "Tủ đồ" },
+    { label: "Thú cưng", value: "Thú cưng" },
+    { label: "Bảo vệ", value: "Bảo vệ" },
+    { label: "Camera an ninh", value: "Camera an ninh" },
+    { label: "Điều hoà", value: "Điều hoà" },
+    { label: "Nhà bếp", value: "Nhà bếp" },
+    { label: "Máy giặt", value: "Máy giặt" },
+    { label: "Giường", value: "Giường" },
+    { label: "Tivi", value: "Tivi" },
+    { label: "Ban công", value: "Ban công" }
   ];
   //Utilities - End
 
-//Strict Time - Start
-const [strictTime, setStrictTime] = React.useState("");
+  //Strict Time - Start
+  const [strictTime, setStrictTime] = React.useState("");
 
-const valueStrictTime = [
-  "Có",
-  "Không",
-];
+  const valueStrictTime = [
+    "Có",
+    "Không",
+  ];
 
-const onChangeStrictTime = (e) => {
+  const onChangeStrictTime = (e) => {
     setStrictTime(e.target.value);
-};
-//Strict Time - End
+  };
+  let chosenUltilities = [];
+  const updateUltilities = (checkedValue) => {
+    console.log(checkedValue);
+    chosenUltilities = [...checkedValue];
+  }
 
+  //Strict Time - End
+  const onFinish = (values) => {
+    //TODO: validate
+    const path = '/post-manager';
+    const myInit = {
+      method: 'POST',
+      body: JSON.stringify({
+        postType: values.postType,
+        roomType: values.roomType,
+        numberRoomAvailable: values.numberRoomAvailable,
+        numberPeoplePerRoom: values.numberPeoplePerRoom,
+        gender: values.gender,
+        deposit: values.deposit,
+        electricPrice: values.electricPrice,
+        waterPrice: values.waterPrice,
+        internetPrice: values.internetPrice,
+        otherPrice: values.otherPrice,
+        location: values.location,
+        utilities: [...chosenUltilities],
+        phone: values.phone,
+        caption: values.caption,
+        description: values.description,
+        strictTime: values.strictTime,
+        StrictTimeStart: values.StrictTimeStart,
+        StrictTimeEnd: values.StrictTimeEnd
+      }),
+    }
+    console.log(myInit.body);
+    sendRequest(path, myInit)
+      .then(result => {
+        if (result.error == null) {
+          window.alert("Error:" + result.error);
+        } else {
+          window.alert("New Post created Successfully");
+          history.push("/home");
+        }
+      }
+      );;
+  };
   return (
     <Form
       {...formItemLayout}
       //   form={form}
       name="post"
+      onFinish={onFinish}
     >
-      <Form.Item label="Thông tin của phòng" />
+      <h1>Thông tin của phòng:</h1>
       <Form.Item
-        name="post-type"
+        name="postType"
         label="Loại hình"
         rules={[
           {
@@ -192,7 +235,7 @@ const onChangeStrictTime = (e) => {
         />
       </Form.Item>
       <Form.Item
-        name="room-type"
+        name="roomType"
         label="Hình thức trọ"
         rules={[
           {
@@ -208,7 +251,7 @@ const onChangeStrictTime = (e) => {
         />
       </Form.Item>
       <Form.Item
-        name="number-room-available"
+        name="numberRoomAvailable"
         label="Số lượng phòng trống (đơn vị: phòng)"
         rules={[
           {
@@ -224,7 +267,7 @@ const onChangeStrictTime = (e) => {
         />
       </Form.Item>
       <Form.Item
-        name="number-person-per-room"
+        name="numberPeoplePerRoom"
         label="Sức chứa (đơn vị: người/phòng)"
         rules={[
           {
@@ -255,9 +298,10 @@ const onChangeStrictTime = (e) => {
           value={gender}
         />
       </Form.Item>
+
       <Form.Item
         name="price"
-        label="Giá cho thuê (đơn vị: VND/căn, VND/phòng, VND/người *Cần chỉnh sửa đoạn này)"
+        label={priceUnit}
         rules={[
           {
             required: true,
@@ -271,11 +315,10 @@ const onChangeStrictTime = (e) => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="electric-price"
+        name="electricPrice"
         label="Giá điện"
         rules={[
           {
-            required: true,
             message: "Hãy nhập giá điện!",
           },
         ]}
@@ -283,11 +326,10 @@ const onChangeStrictTime = (e) => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="water-price"
+        name="waterPrice"
         label="Giá nước"
         rules={[
           {
-            required: true,
             message: "Hãy nhập giá nước!",
           },
         ]}
@@ -295,18 +337,17 @@ const onChangeStrictTime = (e) => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="internet-price"
+        name="internetPrice"
         label="Giá internet/truyền hình cáp"
         rules={[
           {
-            required: true,
             message: "Hãy nhập giá internet/truyền hình cáp!",
           },
         ]}
       >
         <Input />
       </Form.Item>
-      <Form.Item name="other-price" label="Giá chi phí khác">
+      <Form.Item name="otherPrice" label="Giá chi phí khác">
         <Input />
       </Form.Item>
       <Form.Item
@@ -322,58 +363,49 @@ const onChangeStrictTime = (e) => {
       >
         <Cascader options={residences} />
       </Form.Item>
-      <br/>
-      <Form.Item label="Tiện ích" />
-      <br/>
       <Form.Item
         name="image"
         label="Hình ảnh"
         rules={[
           {
-            required: true,
-            message: "Hãy tải hình ảnh lên!",
+            required: false,
+            message: "Hãy tải ít nhất 4 hình ảnh lên!",
           },
         ]}
       ></Form.Item>
       <Form.Item name="utilities" label="Tiện ích">
-        {utilities.map((item) => {
-          return <Checkbox>{item}</Checkbox>;
-        })}
+        <Checkbox.Group options={utilities} onChange={updateUltilities} />
       </Form.Item>
-      <Form.Item label="Xác nhận thông tin" />
+      <h1>Thông tin bài đăng:</h1>
       <Form.Item
         name="phone"
         label="Số điện thoại"
         rules={[
           {
+
             required: true,
-            message: "Hãy nhập số điện thoại của bạn!",
+            message: 'Hãy nhập số điện thoại!',
           },
         ]}
       >
-        <Input
-            addonBefore={prefixSelector}
-          style={{
-            width: "100%",
-          }}
-        />
+        <Input />
       </Form.Item>
       <Form.Item
         name="caption"
         label="Tiêu đề bài đăng"
       >
-        <Input/>
+        <Input />
       </Form.Item>
       <Form.Item
-        name="content"
+        name="description"
         label="Nội dung mô tả"
       >
         <TextArea rows={4} />
-        </Form.Item>
-      
-        <Form.Item
-        name="strict-time"
-        label="Thiết lập giờ giới nghiêm (viết tạm thế này, tính sau)"
+      </Form.Item>
+
+      <Form.Item
+        name="strictTime"
+        label="Giờ giới nghiêm"
         rules={[
           {
             required: true,
@@ -387,14 +419,16 @@ const onChangeStrictTime = (e) => {
           value={strictTime}
         />
       </Form.Item>
-
-      <Form.Item name="StrictTimeStart" label="Thời gian bắt đầu">
-        <Input />
-      </Form.Item>
-      <Form.Item name="StrictTimeEnd" label="Thời gian kết thúc">
-        <Input />
-      </Form.Item>
-      
+      {
+        strictTime === "Có" && <>
+          <Form.Item name="StrictTimeStart" label="Thời gian bắt đầu">
+            <Input />
+          </Form.Item>
+          <Form.Item name="StrictTimeEnd" label="Thời gian kết thúc">
+            <Input />
+          </Form.Item>
+        </>
+      }
       <Form.Item
         name="agreement"
         valuePropName="checked"
@@ -417,7 +451,7 @@ const onChangeStrictTime = (e) => {
           Đăng bài
         </Button>
       </Form.Item>
-    </Form>
+    </Form >
   );
 }
 

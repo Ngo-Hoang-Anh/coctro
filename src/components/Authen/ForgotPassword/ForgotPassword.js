@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Input, Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { URLpath, sendRequest } from './../../../common/utility';
+import { sendRequest } from './../../../common/utility';
 import { useHistory } from "react-router-dom";
 
 function ForgotPassword(props) {
@@ -9,7 +9,7 @@ function ForgotPassword(props) {
     const [currentEmail, setCurrentEmail] = useState(null);
     const sendToEmail = (values) => {
         //TODO: validate
-        const testURL = URLpath + '/forgot-password';
+        const path = '/forgot-password';
         const myInit = {
             method: 'POST',
             body: JSON.stringify({
@@ -18,18 +18,17 @@ function ForgotPassword(props) {
         }
         props.setIsProgressing(true);
         setCurrentEmail(values.email);
-        sendRequest(testURL, myInit).then((result) => {
+        sendRequest(path, myInit).then((result) => {
             if (result.error == null) {
-                // setCurrentEmail(values.email);
+                setCurrentEmail(values.email);
             } else {
-                window.alert(result.error);
+                window.alert("Error:" + result.error);
             }
             setTimeout(() => props.setIsProgressing(false), 2000);
         });
     };
     const confirmOTP = (values) => {
-        console.log("this shit is running");
-        const testURL = URLpath + '/change-password';
+        const path = '/change-password';
         const myInit = {
             method: 'POST',
             body: JSON.stringify({
@@ -38,11 +37,16 @@ function ForgotPassword(props) {
                 otp: values.otp
             }),
         }
-        sendRequest(testURL, myInit)
+        sendRequest(path, myInit)
             .then(result => {
-                console.log(result);
-            }
-            );;
+                if (result.error == null) {
+
+                    window.alert("Password changed successfully");
+                    history.push('/login')
+                } else {
+                    window.alert("Error:" + result.error);
+                }
+            });;
     }
 
     return (<>

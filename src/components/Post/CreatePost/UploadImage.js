@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Upload, Modal, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { URLpath, sendRequest } from '../../../common/utility';
+import { sendRequest } from '../../../common/utility';
 
 function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -12,7 +12,6 @@ function getBase64(file) {
         reader.onerror = error => reject(error);
     });
 }
-
 const CreatePostPage = () => {
     const [previewVisible, setPreviewVisible] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
@@ -41,15 +40,21 @@ const CreatePostPage = () => {
 
     const handleChange = ({ fileList }) => setFileList(fileList);
     const upLoadImg = () => {
-        const testURL = URLpath + '/login';
+        const path = '/post-manager';
         console.log(newestImg);
         const myInit = {
             method: 'POST',
-            body: JSON.stringify({
-                image: newestImg
-            }),
+            body: JSON.stringify(
+                {
+                    imageList:
+                        [
+                            fileList[0].thumbUrl.slice(`data:image/jpeg;base64,`.length - 1, fileList[0].thumbUrl.length),
+                            fileList[1].thumbUrl.slice(`data:image/jpeg;base64,`.length - 1, fileList[0].thumbUrl.length)
+                        ]
+                }
+            ),
         }
-        sendRequest(testURL, myInit).then((result) => {
+        sendRequest(path, myInit).then((result) => {
             console.log(result);
         });
     }
@@ -79,8 +84,10 @@ const CreatePostPage = () => {
             >
                 <img alt="example" style={{ width: '100%' }} src={previewImage} />
             </Modal>
-            {/* <img src={`data:image/jpeg;base64,` + newestImg} /> */}
             <img src={newestImg} alt="" />
+            <img src="https://fptu-house-bucket.s3.ap-southeast-1.amazonaws.com/1632923246191.png" alt="" />
+            <img src={newestImg} alt="" />
+
 
         </>
     );

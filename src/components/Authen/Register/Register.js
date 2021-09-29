@@ -2,14 +2,14 @@ import React from "react";
 
 import { Form, Input, Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { URLpath, sendRequest } from '../../../common/utility';
+import { sendRequest } from '../../../common/utility';
 import { useHistory } from "react-router-dom";
 
 const Register = () => {
   let history = useHistory();
   const onFinish = (values) => {
     //TODO: validate
-    const testURL = URLpath + '/register';
+    const path = '/register';
     const myInit = {
       method: 'POST',
       body: JSON.stringify({
@@ -19,13 +19,13 @@ const Register = () => {
         phone: values.phone
       }),
     }
-    sendRequest(testURL, myInit)
+    sendRequest(path, myInit)
       .then(result => {
         if (result.error == null) {
           window.alert("New account created successfully");
           history.push("/login");
         } else {
-          window.alert(result.error);
+          window.alert("Error:" + result.error);
         }
       }
       );;
