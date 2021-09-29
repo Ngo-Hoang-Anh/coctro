@@ -11,6 +11,7 @@ const Register = React.lazy(() => import('../../Authen/Register/Register'));
 const ForgotPassword = React.lazy(() => import('../../Authen/ForgotPassword/ForgotPassword'));
 const Home = React.lazy(() => import('../../Home/Home'));
 const Error = React.lazy(() => import('../Error/Error'));
+const Post = React.lazy(() => import('../../Post/CreatePost/Post'));
 
 function HeaderCommon(props) {
   const [token, setToken] = useState(window.localStorage.getItem("token"));
@@ -54,6 +55,9 @@ function HeaderCommon(props) {
                 </div>
                 <Link to="/home"></Link>
               </Menu.Item>
+              <Menu.Item key="createNewPost" style={{ display: "inline-flex" }}>
+                <Link to="/create-new-post">Tạo bài đăng</Link>
+              </Menu.Item>
               <Menu.Item key="createPost" style={{ display: "inline-flex" }}>
                 <Link to="/create-post">Tạo Post</Link>
               </Menu.Item>
@@ -90,6 +94,8 @@ function HeaderCommon(props) {
                     setIsProgressing={setIsProgressing}
                   />
                 )} />
+                
+                <Route path="/create-new-post" component={Post} />
                 <Route path="/:somestring" component={Error} />
               </Switch>
             </section>

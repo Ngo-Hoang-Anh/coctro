@@ -16,9 +16,9 @@ function App() {
       {/* <Content style={{ padding: '0 50px' }}>
         
       </Content> */}
-      <Footer style={{ textAlign: 'center' }}>
+      {/* <Footer style={{ textAlign: 'center' }}>
         <FooterCommon />
-      </Footer>
+      </Footer> */}
     </Layout>
   )
 }
