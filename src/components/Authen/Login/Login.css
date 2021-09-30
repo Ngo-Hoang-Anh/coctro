@@ -1,6 +1,68 @@
-.container-form-login {
+.container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  min-height: 66vh;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding: 16px;
+  background: #fe762c;
+  font-family: "Bookman";
+  margin-top: 10px;
+}
+
+.container .container-form-login {
+  width: 100%;
+  max-width: 400px;
+  background-color: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  -webkit-box-shadow: 0px 2px 64px rgba(0, 0, 0, 0.2);
+          box-shadow: 0px 2px 64px rgba(0, 0, 0, 0.2);
+}
+
+.container #logo {
+  width: 400px;
+  margin-right: 200px;
+}
+
+.container .button-login {
+  text-align: center;
+}
+
+.container .email-login {
+  margin-top: 20px;
+}
+
+.container .login-label {
+  margin-top: 30px;
+  font-size: 30px;
+  text-align: center;
+}
+
+.container .email-login, .container .password, .container .login-form-button {
   width: 300px;
-  margin-top: 50px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.container .email-login .ant-input-affix-wrapper, .container .password .ant-input-affix-wrapper {
+  height: 40px;
+}
+
+.container .login-form-button {
+  height: 40px;
+}
+
+.container .ant-form-item-explain-error, .container .login-form-forgot, .container .ant-input-affix-wrapper {
+  margin-left: 50px;
+}
+
+.container .link-to-register {
   text-align: center;
 }
 

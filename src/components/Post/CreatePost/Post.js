@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { sendRequest } from '../../../common/utility';
 import { useHistory } from "react-router-dom";
 import { Form, Input, InputNumber, Cascader, Select, Checkbox, Button, Radio } from "antd";
+import './Post.css';
 
 function Post(props) {
   let history = useHistory();
@@ -71,15 +72,6 @@ function Post(props) {
       },
     },
   };
-
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select style={{ width: 70 }}>
-        <Option value="86">+86</Option>
-        <Option value="87">+87</Option>
-      </Select>
-    </Form.Item>
-  );
 
   //Post Type - Start
   const [postType, setPostType] = useState("");
@@ -211,13 +203,14 @@ function Post(props) {
       );;
   };
   return (
-    <Form
+    <div className="container">
+      <Form
       {...formItemLayout}
       //   form={form}
       name="post"
       onFinish={onFinish}
     >
-      <h1>Thông tin của phòng:</h1>
+      <h1>Thông tin chung:</h1>
       <Form.Item
         name="postType"
         label="Loại hình"
@@ -299,6 +292,12 @@ function Post(props) {
         />
       </Form.Item>
 
+      <Form.Item {...tailFormItemLayout}>
+        <Button type="primary" htmlType="submit">
+          Tiếp theo
+        </Button>
+      </Form.Item>
+      <h1>Thông tin chi tiết:</h1>
       <Form.Item
         name="price"
         label={priceUnit}
@@ -376,6 +375,14 @@ function Post(props) {
       <Form.Item name="utilities" label="Tiện ích">
         <Checkbox.Group options={utilities} onChange={updateUltilities} />
       </Form.Item>
+      <Form.Item {...tailFormItemLayout}>
+        <Button type="primary" htmlType="submit">
+          Quay lại
+        </Button>
+        <Button type="primary" htmlType="submit">
+          Tiếp theo
+        </Button>
+      </Form.Item>
       <h1>Thông tin bài đăng:</h1>
       <Form.Item
         name="phone"
@@ -442,16 +449,21 @@ function Post(props) {
         ]}
         {...tailFormItemLayout}
       >
-        <Checkbox>
+        {/* <Checkbox>
           Tôi đã đọc kỹ thông tin
-        </Checkbox>
+        </Checkbox> */}
       </Form.Item>
       <Form.Item {...tailFormItemLayout}>
+      <Button type="primary" htmlType="submit">
+          Quay lại
+        </Button>
         <Button type="primary" htmlType="submit">
           Đăng bài
         </Button>
+        Đề xuất bấm vào đăng bài thì sẽ cho xem preview trước, rồi bấm oke thì mới đăng
       </Form.Item>
     </Form >
+    </div>
   );
 }
 

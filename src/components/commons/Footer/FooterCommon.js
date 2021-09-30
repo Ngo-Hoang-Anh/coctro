@@ -1,8 +1,9 @@
 import React from 'react';
+import './Footer.css';
 
 function FooterCommon(props) {
     return (
-        <div>
+        <div className="container">
             Footer
         </div>
     );
