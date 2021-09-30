@@ -1,46 +1,13 @@
 import React, { useState } from "react";
 import { sendRequest } from '../../../common/utility';
 import { useHistory } from "react-router-dom";
-import { Form, Input, InputNumber, Cascader, Select, Checkbox, Button, Radio } from "antd";
-
+import { Form, Input, InputNumber, Select, Checkbox, Button, Radio, Modal } from "antd";
+import { LocationPicker } from "../../commons/LocationPicker/LocationPicker";
+const UploadImage = React.lazy(() => import('../../Post/CreatePost/UploadImage'));
 function Post(props) {
   let history = useHistory();
   const { Option } = Select;
   const { TextArea } = Input;
-  const residences = [
-    {
-      value: "zhejiang",
-      label: "Zhejiang",
-      children: [
-        {
-          value: "hangzhou",
-          label: "Hangzhou",
-          children: [
-            {
-              value: "xihu",
-              label: "West Lake",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      value: "jiangsu",
-      label: "Jiangsu",
-      children: [
-        {
-          value: "nanjing",
-          label: "Nanjing",
-          children: [
-            {
-              value: "zhonghuamen",
-              label: "Zhong Hua Men",
-            },
-          ],
-        },
-      ],
-    },
-  ];
   const formItemLayout = {
     labelCol: {
       xs: {
@@ -71,16 +38,6 @@ function Post(props) {
       },
     },
   };
-
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select style={{ width: 70 }}>
-        <Option value="86">+86</Option>
-        <Option value="87">+87</Option>
-      </Select>
-    </Form.Item>
-  );
-
   //Post Type - Start
   const [postType, setPostType] = useState("");
   const valuePostType = ["Tìm ở ghép", "Cho thuê trọ"];
@@ -124,15 +81,14 @@ function Post(props) {
   //Number Person Per Room - End
 
   //Gender - Start
-  const [gender, setGender] = useState("");
 
-  const valueGender = ["Tất cả", "Nam", "Nữ"];
+  const valueGender = [{ label: 'Tất cả', value: 'Tất cả' }, { label: 'Nam', value: 'Nam' }, { label: 'Nữ', value: 'Nữ' }];
 
-  const onChangeGender = (e) => {
-    setPostType(e.target.value);
-  };
   //Gender - End
+  //Address -Start 
 
+  const [chosenLocation, setChosenLocation] = useState("");
+  //Address-end
   //Utilities - Start
   const utilities = [
     { label: "WC riêng", value: "WC riêng" },
@@ -152,60 +108,100 @@ function Post(props) {
     { label: "Tivi", value: "Tivi" },
     { label: "Ban công", value: "Ban công" }
   ];
+  const [chosenUltilities, setChosenUltilities] = useState([]);
+  const updateUltilities = (checkedValue) => {
+    console.log(checkedValue);
+    setChosenUltilities([...checkedValue]);
+  }
   //Utilities - End
-
   //Strict Time - Start
   const [strictTime, setStrictTime] = React.useState("");
-
   const valueStrictTime = [
     "Có",
     "Không",
   ];
-
   const onChangeStrictTime = (e) => {
     setStrictTime(e.target.value);
   };
-  let chosenUltilities = [];
-  const updateUltilities = (checkedValue) => {
-    console.log(checkedValue);
-    chosenUltilities = [...checkedValue];
+  //Strict Time - End
+  //Images - Start
+  const [fileList, setFileList] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  //Images - End
+  //
+  const [isSelfGovernance, setIsSelfGovernance] = useState(false);
+  const updateSelfGorvernance = (e) => {
+    setIsSelfGovernance(e.target.checked);
   }
 
-  //Strict Time - End
   const onFinish = (values) => {
     //TODO: validate
     const path = '/post-manager';
+    let tempFileList = [];
+    for (var i = 0; i < fileList.length; i++) {
+      tempFileList[i] = fileList[i].thumbUrl.slice(`data:image/jpeg;base64,`.length - 1, fileList[i].thumbUrl.length);
+    }
+    let token = window.localStorage.getItem('token').toString();
+    let locationValue = [];
+    const tempLocation = [...chosenLocation];
+    tempLocation.forEach((location) => {
+      locationValue = [...locationValue, location.value];
+    })
+    console.log(locationValue);
     const myInit = {
       method: 'POST',
+      headers: {
+        'Authorization': token
+      },
       body: JSON.stringify({
-        postType: values.postType,
-        roomType: values.roomType,
-        numberRoomAvailable: values.numberRoomAvailable,
-        numberPeoplePerRoom: values.numberPeoplePerRoom,
-        gender: values.gender,
-        deposit: values.deposit,
-        electricPrice: values.electricPrice,
-        waterPrice: values.waterPrice,
-        internetPrice: values.internetPrice,
-        otherPrice: values.otherPrice,
-        location: values.location,
+        post_type: values.postType,
+        post_title: values.postTitle || values.motelName,
+        motel_type: values.motelType,
+        room_available: values.roomAvailable,
+        max_slot_per_room: values.maxSlotPerRoom,
+        room_gender: values.roomGender,
+        room_area: values.roomArea,
+        room_cost: {
+          rental_cost: values.rentalCost,
+          deposit_cost: values.depositCost,
+          electricity_cost: values.electricCost,
+          water_cost: values.waterCost,
+          internet_cost: values.internetCost,
+          clean_cost: values.cleanCost,
+        },
+        contact: {
+          contact_numbers: [values.contactNumbers],
+          contact_name: [values.contactName]
+        },
+        imageList: [...tempFileList],
         utilities: [...chosenUltilities],
-        phone: values.phone,
-        caption: values.caption,
-        description: values.description,
-        strictTime: values.strictTime,
-        StrictTimeStart: values.StrictTimeStart,
-        StrictTimeEnd: values.StrictTimeEnd
+        extra_info: values.extra_info,
+        motel_name: values.motelName,
+        motel_address: [...locationValue],
+        self_governance: isSelfGovernance,
+        // strictTime: values.strictTime,
+        // StrictTimeStart: values.StrictTimeStart,
+        // StrictTimeEnd: values.StrictTimeEnd,
       }),
     }
-    console.log(myInit.body);
     sendRequest(path, myInit)
       .then(result => {
         if (result.error == null) {
-          window.alert("Error:" + result.error);
-        } else {
           window.alert("New Post created Successfully");
-          history.push("/home");
+        } else {
+          window.alert("Error:" + result.error);
         }
       }
       );;
@@ -218,6 +214,18 @@ function Post(props) {
       onFinish={onFinish}
     >
       <h1>Thông tin của phòng:</h1>
+      <Form.Item
+        name="motelName"
+        label={"Tên nhà trọ:"}
+        rules={[
+          {
+            required: true,
+            message: "Hãy nhập tên nhà trọ!",
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
       <Form.Item
         name="postType"
         label="Loại hình"
@@ -235,7 +243,7 @@ function Post(props) {
         />
       </Form.Item>
       <Form.Item
-        name="roomType"
+        name="motelType"
         label="Hình thức trọ"
         rules={[
           {
@@ -251,7 +259,7 @@ function Post(props) {
         />
       </Form.Item>
       <Form.Item
-        name="numberRoomAvailable"
+        name="roomAvailable"
         label="Số lượng phòng trống (đơn vị: phòng)"
         rules={[
           {
@@ -267,7 +275,7 @@ function Post(props) {
         />
       </Form.Item>
       <Form.Item
-        name="numberPeoplePerRoom"
+        name="maxSlotPerRoom"
         label="Sức chứa (đơn vị: người/phòng)"
         rules={[
           {
@@ -283,7 +291,7 @@ function Post(props) {
         />
       </Form.Item>
       <Form.Item
-        name="gender"
+        name="roomGender"
         label="Giới tính"
         rules={[
           {
@@ -294,13 +302,22 @@ function Post(props) {
       >
         <Radio.Group
           options={valueGender}
-          onChange={onChangeGender}
-          value={gender}
         />
       </Form.Item>
-
       <Form.Item
-        name="price"
+        name="roomArea"
+        label="Diện tích phòng"
+        rules={[
+          {
+            required: true,
+            message: "Hãy nhập diện tích",
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="rentalCost"
         label={priceUnit}
         rules={[
           {
@@ -311,11 +328,11 @@ function Post(props) {
       >
         <Input />
       </Form.Item>
-      <Form.Item name="deposit" label="Giá tiền đặt cọc">
+      <Form.Item name="depositCost" label="Giá tiền đặt cọc">
         <Input />
       </Form.Item>
       <Form.Item
-        name="electricPrice"
+        name="electricCost"
         label="Giá điện"
         rules={[
           {
@@ -326,7 +343,7 @@ function Post(props) {
         <Input />
       </Form.Item>
       <Form.Item
-        name="waterPrice"
+        name="waterCost"
         label="Giá nước"
         rules={[
           {
@@ -337,7 +354,7 @@ function Post(props) {
         <Input />
       </Form.Item>
       <Form.Item
-        name="internetPrice"
+        name="internetCost"
         label="Giá internet/truyền hình cáp"
         rules={[
           {
@@ -347,42 +364,57 @@ function Post(props) {
       >
         <Input />
       </Form.Item>
-      <Form.Item name="otherPrice" label="Giá chi phí khác">
+      <Form.Item name="cleanCost" label="Giá vệ sinh">
         <Input />
       </Form.Item>
       <Form.Item
-        name="location"
+        name="motelAddress"
         label="Địa chỉ"
         rules={[
           {
             type: "array",
-            required: true,
-            message: "Hãy nhập địa chỉ khu trọ của bạn!",
           },
         ]}
       >
-        <Cascader options={residences} />
+        <LocationPicker setChosenLocation={setChosenLocation} />
+        {/* <Button onClick={() => console.log(chosenLocation)}>Test</Button> */}
+        {chosenLocation ? null : <p style={{ color: 'red' }}>Hãy chọn địa chỉ</p>}
       </Form.Item>
       <Form.Item
-        name="image"
+        name="postGallery"
         label="Hình ảnh"
-        rules={[
-          {
-            required: false,
-            message: "Hãy tải ít nhất 4 hình ảnh lên!",
-          },
-        ]}
-      ></Form.Item>
+      >
+        <p>{fileList.length} ảnh đã được tải lên</p>
+        <Button type="primary" onClick={showModal}>
+          Tải ảnh lên
+        </Button>
+        <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+          <UploadImage fileList={fileList} setFileList={setFileList} />
+        </Modal>
+        {fileList.length < 4 ? <p style={{ color: 'red' }}>Hãy Upload ít nhất 4 ảnh</p> : null}
+      </Form.Item>
       <Form.Item name="utilities" label="Tiện ích">
         <Checkbox.Group options={utilities} onChange={updateUltilities} />
       </Form.Item>
       <h1>Thông tin bài đăng:</h1>
       <Form.Item
-        name="phone"
-        label="Số điện thoại"
+        name="contactName"
+        label="Người liên hệ"
         rules={[
           {
 
+            required: true,
+            message: 'Hãy nhập người liên hệ!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="contactNumbers"
+        label="Số điện thoại"
+        rules={[
+          {
             required: true,
             message: 'Hãy nhập số điện thoại!',
           },
@@ -391,18 +423,25 @@ function Post(props) {
         <Input />
       </Form.Item>
       <Form.Item
-        name="caption"
+        name="postTitle"
         label="Tiêu đề bài đăng"
       >
         <Input />
       </Form.Item>
       <Form.Item
-        name="description"
+        name="extraInfo"
         label="Nội dung mô tả"
       >
         <TextArea rows={4} />
       </Form.Item>
+      <Form.Item
 
+        {...tailFormItemLayout}
+      >
+        <Checkbox onChange={updateSelfGorvernance}>
+          Trọ tự quản
+        </Checkbox>
+      </Form.Item>
       <Form.Item
         name="strictTime"
         label="Giờ giới nghiêm"
@@ -447,7 +486,7 @@ function Post(props) {
         </Checkbox>
       </Form.Item>
       <Form.Item {...tailFormItemLayout}>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" disabled={fileList.length < 4}>
           Đăng bài
         </Button>
       </Form.Item>

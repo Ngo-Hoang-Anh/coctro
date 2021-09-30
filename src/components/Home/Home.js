@@ -1,8 +1,9 @@
 import React from "react";
-import { List, Card } from 'antd';
+import { List } from 'antd';
 import PostHome from '../Post/PostHome/PostHome';
-import { HomeFilled, TeamOutlined, AreaChartOutlined, EnvironmentFilled, DollarCircleFilled, ContactsFilled } from '@ant-design/icons';
+import { LocationPicker } from "../commons/LocationPicker/LocationPicker";
 
+import { HomeFilled, TeamOutlined, AreaChartOutlined, EnvironmentFilled, DollarCircleFilled, ContactsFilled } from '@ant-design/icons';
 const data = [
   {
     title: 'Nhà trọ Xanh Lá',
@@ -67,21 +68,24 @@ const data = [
 ];
 
 function Home(props) {
-    return <List
-    dataSource={data}
-    renderItem={item => (
-      <List.Item>
-        <PostHome src = {item.src}/>
-        {item.title}<br/>
-        <HomeFilled />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.room_type}<br/>
-        <TeamOutlined />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.gender}<br/>
-        <AreaChartOutlined />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.area}<br/>
-        <EnvironmentFilled />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.location}<br/>
-        <DollarCircleFilled />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.price}<br/>
-        <ContactsFilled />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.roomAvailable} phòng trống
-    </List.Item>
-    )}
-  />;
+  return <>
+    <LocationPicker />
+    <List
+      dataSource={data}
+      renderItem={item => (
+        <List.Item>
+          <PostHome src={item.src} />
+          {item.title}<br />
+          <HomeFilled />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.room_type}<br />
+          <TeamOutlined />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.gender}<br />
+          <AreaChartOutlined />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.area}<br />
+          <EnvironmentFilled />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.location}<br />
+          <DollarCircleFilled />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.price}<br />
+          <ContactsFilled />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.roomAvailable} phòng trống
+        </List.Item>
+      )}
+    />
+  </>;
 }
 
 export default Home;

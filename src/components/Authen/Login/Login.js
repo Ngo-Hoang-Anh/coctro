@@ -20,8 +20,7 @@ const Login = (props) => {
 
     props.setIsProgressing(true);
     sendRequest(path, myInit).then((result) => {
-      console.log(typeof (result.error));
-      if (result.error == undefined) {
+      if (result.error == null) {
         window.localStorage.setItem("token", result.token);
         props.setToken(result.token);
         history.push("/home");
