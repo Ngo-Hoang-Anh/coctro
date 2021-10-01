@@ -91,6 +91,7 @@ function DetailInformation(props) {
           />
           {console.log(props.chosenUltilities + " mamam")}
           {/* tại sao phải có câu lệnh này mới chay. lẽ nào do props.chosenUltilities */}
+          Xoa dong nay di nha
         </Form.Item>
         <Form.Item {...props.tailFormItemLayout}>
           <Button
