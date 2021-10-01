@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { sendRequest } from '../../../common/utility';
+import { sendRequest } from "../../../common/utility";
 import { useHistory } from "react-router-dom";
-import { Form, Input, InputNumber, Cascader, Select, Checkbox, Button, Radio } from "antd";
-import './Post.css';
+import "./Post.css";
+
+import CommonInformation from "./FormInformation/CommonInformation/CommonInformation";
+import DetailInformation from "./FormInformation/DetailInformation/DetailInformation";
+import PostInformation from "./PostInformation/PostInformation";
 
 function Post(props) {
   let history = useHistory();
-  const { Option } = Select;
-  const { TextArea } = Input;
+  
   const residences = [
     {
       value: "zhejiang",
@@ -82,16 +84,15 @@ function Post(props) {
   };
   //Post Type - End
 
+
   //Room Type - Start
   const [roomType, setRoomType] = useState("");
-
   const valueRoomType = [
     "Ký túc xá",
     "Phòng trọ cho thuê",
     "Nhà nguyên căn",
     "Chung cư mini",
   ];
-
   const onChangeRoomType = (e) => {
     let value = e.target.value;
     setRoomType(value);
@@ -107,23 +108,72 @@ function Post(props) {
   };
   //Room Type - End
 
+
   //Number Room Available - Start
-  function onChangeNumberRoomAvaiable(value) { }
+  const [numberRoomAvailable, setNumberRoomAvailable] = useState(3)
+  function onChangeNumberRoomAvaiable(value) {
+    setNumberRoomAvailable(value)
+  }
   //Number Room Available - End
 
+
   //Number Person Per Room - Start
-  function onChangeNumberPersonPerRoom(value) { }
+  const [numberPeoplePerRoom, setNumberPeoplePerRoom] = useState(2)
+  function onChangeNumberPersonPerRoom(value) {
+    setNumberPeoplePerRoom(value)
+  }
   //Number Person Per Room - End
 
   //Gender - Start
   const [gender, setGender] = useState("");
-
   const valueGender = ["Tất cả", "Nam", "Nữ"];
-
   const onChangeGender = (e) => {
-    setPostType(e.target.value);
+    setGender(e.target.value);
   };
   //Gender - End
+
+  //Rent Price - Start
+  const [rentPrice, setRentPrice] = useState("");
+  const onChangeRentPrice = (e) => {
+    setRentPrice(e.target.value)
+  }
+  //Rent Price - End
+
+  //Deposit - Start
+  const [deposit, setDeposit] = useState("");
+  const onChangeDeposot = (e) => {
+    setDeposit(e.target.value)
+  }
+  //Deposit - End
+
+  //Electric Price - Start
+  const [electricPrice, setElectricPrice] = useState("");
+  const onChangeElectricPrice = (e) => {
+    setElectricPrice(e.target.value)
+  }
+  //Electric Price - End
+
+  //Water Price - Start
+  const [waterPrice, setWaterPrice] = useState("");
+  const onChangeWaterPrice = (e) => {
+    setWaterPrice(e.target.value)
+  }
+  //Water Price - End
+
+  //Internet Price - Start
+  const [internetPrice, setInternetPrice] = useState("");
+  const onChangeInternetPrice = (e) => {
+    setInternetPrice(e.target.value)
+  }
+  //Internet Price - End
+
+  //Other Price - Start
+  const [otherPrice, setOtherPrice] = useState("");
+  const onChangeOtherPrice = (e) => {
+    setOtherPrice(e.target.value)
+  }
+  //Other Price - End
+
 
   //Utilities - Start
   const utilities = [
@@ -142,33 +192,69 @@ function Post(props) {
     { label: "Máy giặt", value: "Máy giặt" },
     { label: "Giường", value: "Giường" },
     { label: "Tivi", value: "Tivi" },
-    { label: "Ban công", value: "Ban công" }
+    { label: "Ban công", value: "Ban công" },
   ];
   //Utilities - End
 
-  //Strict Time - Start
-  const [strictTime, setStrictTime] = React.useState("");
+  //Phone - Start
+const [phone, setPhone] = useState();
+const onChangePhone = (e) => {
+  setPhone(e.target.value)
+}
+  //Phone - End
 
-  const valueStrictTime = [
-    "Có",
-    "Không",
-  ];
+  //Caption - Start
+  const [caption, setCaption] = useState("");
+  const onChangeCaption = (e) => {
+    setCaption(e.target.value)
+  }
+  //Caption - End
+
+  //Description - Start
+  const [description, setDescription] = useState("");
+  const onChangeDescription = (e) => {
+    setDescription(e.target.value)
+  }
+  //Description - End
+
+  //Strict Time - Start
+  const [strictTime, setStrictTime] = useState("");
+  const [strictTimeStart, setStrictTimeStart] = useState("");
+  const [strictTimeEnd, setStrictTimeEnd] = useState("");
+  
+  const valueStrictTime = ["Có", "Không"];
 
   const onChangeStrictTime = (e) => {
     setStrictTime(e.target.value);
   };
-  let chosenUltilities = [];
-  const updateUltilities = (checkedValue) => {
-    console.log(checkedValue);
-    chosenUltilities = [...checkedValue];
-  }
+  const onChangeStrictTimeStart = (e) => {
+    setStrictTimeStart(e.target.value);
+  };
+  const onChangeStrictTimeEnd = (e) => {
+    setStrictTimeEnd(e.target.value);
+  };
+//Strict Time - End
+  
+  //Ultilities - Start
+  const [chosenUltilities, setChosenUltilities] = useState([]);
+  const onChangeUltilities = (e) => {
+    
+    setChosenUltilities(e);
+  };
+  //Ultilities - End
 
-  //Strict Time - End
+  //Checkbox Confirm - Start
+const [checkboxConfirm, setCheckboxConfirm] = useState();
+const onCheckCheckboxConfirm = (e) => {
+  setCheckboxConfirm(e.target.value)
+}
+  //Checkbox Confirm - End
+  
   const onFinish = (values) => {
     //TODO: validate
-    const path = '/post-manager';
+    const path = "/post-manager";
     const myInit = {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({
         postType: values.postType,
         roomType: values.roomType,
@@ -187,282 +273,110 @@ function Post(props) {
         description: values.description,
         strictTime: values.strictTime,
         StrictTimeStart: values.StrictTimeStart,
-        StrictTimeEnd: values.StrictTimeEnd
+        StrictTimeEnd: values.StrictTimeEnd,
       }),
-    }
+    };
     console.log(myInit.body);
-    sendRequest(path, myInit)
-      .then(result => {
-        if (result.error == null) {
-          window.alert("Error:" + result.error);
-        } else {
-          window.alert("New Post created Successfully");
-          history.push("/home");
-        }
+    sendRequest(path, myInit).then((result) => {
+      if (result.error == null) {
+        window.alert("Error:" + result.error);
+      } else {
+        window.alert("New Post created Successfully");
+        history.push("/home");
       }
-      );;
+    });
   };
+
+  const [formShow, setFormShow] = useState("common-information");
+  const changeForm = (formShowTmp) => {
+    if (formShowTmp === "common-information") {
+      return (
+        <CommonInformation
+          formItemLayout={formItemLayout}
+          valuePostType={valuePostType}
+          onChangePostType={onChangePostType}
+          postType={postType}
+          valueRoomType={valueRoomType}
+          onChangeRoomType={onChangeRoomType}
+          roomType={roomType}
+          numberRoomAvailable={numberRoomAvailable}
+          onChangeNumberRoomAvaiable={onChangeNumberRoomAvaiable}
+          numberPeoplePerRoom={numberPeoplePerRoom}
+          onChangeNumberPersonPerRoom={onChangeNumberPersonPerRoom}
+          valueGender={valueGender}
+          onChangeGender={onChangeGender}
+          gender={gender}
+          tailFormItemLayout={tailFormItemLayout}
+          nextBack={nextBack}
+        />
+      );
+    }
+
+    if (formShowTmp === "detail-information") {
+      return (
+        <DetailInformation
+          formItemLayout={formItemLayout}
+          priceUnit={priceUnit}
+          rentPrice={rentPrice}
+          onChangeRentPrice={onChangeRentPrice}
+          deposit={deposit}
+          onChangeDeposot={onChangeDeposot}
+          electricPrice={electricPrice}
+          onChangeElectricPrice={onChangeElectricPrice}
+          waterPrice={waterPrice}
+          onChangeWaterPrice={onChangeWaterPrice}
+          internetPrice={internetPrice}
+          onChangeInternetPrice={onChangeInternetPrice}
+          otherPrice={otherPrice}
+          onChangeOtherPrice={onChangeOtherPrice}
+          residences={residences}
+          utilities={utilities}
+          chosenUltilities={chosenUltilities}
+          onChangeUltilities={onChangeUltilities}
+          tailFormItemLayout={tailFormItemLayout}
+          nextBack={nextBack}
+        />
+      );
+    }
+    return (
+      <PostInformation
+      formItemLayout={formItemLayout}
+      onFinish={onFinish}
+      phone={phone}
+      onChangePhone={onChangePhone}
+      caption={caption}
+      description={description}
+      onChangeDescription={onChangeDescription}
+      onChangeCaption={onChangeCaption}
+      valueStrictTime={valueStrictTime}
+      onChangeStrictTime={onChangeStrictTime}
+      strictTime={strictTime}
+      strictTimeStart={strictTimeStart}
+      strictTimeEnd={strictTimeEnd}
+      onChangeStrictTimeStart={onChangeStrictTimeStart}
+      onChangeStrictTimeEnd={onChangeStrictTimeEnd}
+      tailFormItemLayout={tailFormItemLayout}
+      checkboxConfirm={checkboxConfirm}
+      onCheckCheckboxConfirm={onCheckCheckboxConfirm}
+      nextBack={nextBack}
+      />
+    );
+  };
+
+ const nextBack = function(visit) {
+    if(visit==='detail-information') {
+      setFormShow("detail-information");
+    }
+    if(visit==='common-information') {
+      setFormShow("common-information");
+    }
+    if(visit==='post-information') {
+      setFormShow("post-information");
+    }
+  }
   return (
     <div className="container">
-      <Form
-      {...formItemLayout}
-      //   form={form}
-      name="post"
-      onFinish={onFinish}
-    >
-      <h1>Thông tin chung:</h1>
-      <Form.Item
-        name="postType"
-        label="Loại hình"
-        rules={[
-          {
-            required: true,
-            message: "Hãy chọn loại hình!",
-          },
-        ]}
-      >
-        <Radio.Group
-          options={valuePostType}
-          onChange={onChangePostType}
-          value={postType}
-        />
-      </Form.Item>
-      <Form.Item
-        name="roomType"
-        label="Hình thức trọ"
-        rules={[
-          {
-            required: true,
-            message: "Hãy chọn hình thức trọ!",
-          },
-        ]}
-      >
-        <Radio.Group
-          options={valueRoomType}
-          onChange={onChangeRoomType}
-          value={roomType}
-        />
-      </Form.Item>
-      <Form.Item
-        name="numberRoomAvailable"
-        label="Số lượng phòng trống (đơn vị: phòng)"
-        rules={[
-          {
-            required: true,
-            message: "",
-          },
-        ]}
-      >
-        <InputNumber
-          min={0}
-          defaultValue={3}
-          onChange={onChangeNumberRoomAvaiable}
-        />
-      </Form.Item>
-      <Form.Item
-        name="numberPeoplePerRoom"
-        label="Sức chứa (đơn vị: người/phòng)"
-        rules={[
-          {
-            required: true,
-            message: "",
-          },
-        ]}
-      >
-        <InputNumber
-          min={1}
-          defaultValue={2}
-          onChange={onChangeNumberPersonPerRoom}
-        />
-      </Form.Item>
-      <Form.Item
-        name="gender"
-        label="Giới tính"
-        rules={[
-          {
-            required: true,
-            message: "Hãy chọn giới tính!",
-          },
-        ]}
-      >
-        <Radio.Group
-          options={valueGender}
-          onChange={onChangeGender}
-          value={gender}
-        />
-      </Form.Item>
-
-      <Form.Item {...tailFormItemLayout}>
-        <Button type="primary" htmlType="submit">
-          Tiếp theo
-        </Button>
-      </Form.Item>
-      <h1>Thông tin chi tiết:</h1>
-      <Form.Item
-        name="price"
-        label={priceUnit}
-        rules={[
-          {
-            required: true,
-            message: "Hãy nhập giá cho thuê!",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item name="deposit" label="Giá tiền đặt cọc">
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="electricPrice"
-        label="Giá điện"
-        rules={[
-          {
-            message: "Hãy nhập giá điện!",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="waterPrice"
-        label="Giá nước"
-        rules={[
-          {
-            message: "Hãy nhập giá nước!",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="internetPrice"
-        label="Giá internet/truyền hình cáp"
-        rules={[
-          {
-            message: "Hãy nhập giá internet/truyền hình cáp!",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item name="otherPrice" label="Giá chi phí khác">
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="location"
-        label="Địa chỉ"
-        rules={[
-          {
-            type: "array",
-            required: true,
-            message: "Hãy nhập địa chỉ khu trọ của bạn!",
-          },
-        ]}
-      >
-        <Cascader options={residences} />
-      </Form.Item>
-      <Form.Item
-        name="image"
-        label="Hình ảnh"
-        rules={[
-          {
-            required: false,
-            message: "Hãy tải ít nhất 4 hình ảnh lên!",
-          },
-        ]}
-      ></Form.Item>
-      <Form.Item name="utilities" label="Tiện ích">
-        <Checkbox.Group options={utilities} onChange={updateUltilities} />
-      </Form.Item>
-      <Form.Item {...tailFormItemLayout}>
-        <Button type="primary" htmlType="submit">
-          Quay lại
-        </Button>
-        <Button type="primary" htmlType="submit">
-          Tiếp theo
-        </Button>
-      </Form.Item>
-      <h1>Thông tin bài đăng:</h1>
-      <Form.Item
-        name="phone"
-        label="Số điện thoại"
-        rules={[
-          {
-
-            required: true,
-            message: 'Hãy nhập số điện thoại!',
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="caption"
-        label="Tiêu đề bài đăng"
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="description"
-        label="Nội dung mô tả"
-      >
-        <TextArea rows={4} />
-      </Form.Item>
-
-      <Form.Item
-        name="strictTime"
-        label="Giờ giới nghiêm"
-        rules={[
-          {
-            required: true,
-            message: "Hãy chọn thiết lập giờ giới nghiêm hoặc không!",
-          },
-        ]}
-      >
-        <Radio.Group
-          options={valueStrictTime}
-          onChange={onChangeStrictTime}
-          value={strictTime}
-        />
-      </Form.Item>
-      {
-        strictTime === "Có" && <>
-          <Form.Item name="StrictTimeStart" label="Thời gian bắt đầu">
-            <Input />
-          </Form.Item>
-          <Form.Item name="StrictTimeEnd" label="Thời gian kết thúc">
-            <Input />
-          </Form.Item>
-        </>
-      }
-      <Form.Item
-        name="agreement"
-        valuePropName="checked"
-        rules={[
-          {
-            validator: (_, value) =>
-              value
-                ? Promise.resolve()
-                : Promise.reject(new Error("Should accept agreement")),
-          },
-        ]}
-        {...tailFormItemLayout}
-      >
-        {/* <Checkbox>
-          Tôi đã đọc kỹ thông tin
-        </Checkbox> */}
-      </Form.Item>
-      <Form.Item {...tailFormItemLayout}>
-      <Button type="primary" htmlType="submit">
-          Quay lại
-        </Button>
-        <Button type="primary" htmlType="submit">
-          Đăng bài
-        </Button>
-        Đề xuất bấm vào đăng bài thì sẽ cho xem preview trước, rồi bấm oke thì mới đăng
-      </Form.Item>
-    </Form >
+      {changeForm(formShow)}
     </div>
   );
 }
