@@ -3,13 +3,9 @@ export async function sendRequest(path, init) {
     const myRequest = new Request(URL + path, init);
     let result = await fetch(myRequest)
         .then((response) => {
-            if (response.status === 200) {
-                try {
-                    return response.json();
-                } catch {
-                    return response.text();
-                }
-            } else {
+            try {
+                return response.json();
+            } catch {
                 return response.text();
             }
         })

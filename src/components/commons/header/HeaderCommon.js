@@ -58,9 +58,6 @@ function HeaderCommon(props) {
               <Menu.Item key="createNewPost" style={{ display: "inline-flex" }}>
                 <Link to="/create-new-post">Tạo bài đăng</Link>
               </Menu.Item>
-              <Menu.Item key="imageTest" style={{ display: "inline-flex" }}>
-                <Link to="/imageTest">Up Ảnh</Link>
-              </Menu.Item>
             </Divider >
             <Divider orientation="right">
               {(!token) ?
@@ -77,7 +74,6 @@ function HeaderCommon(props) {
             <section>
               <Switch>
                 <Route path="/home" component={Home} />
-                <Route path="/imageTest" component={UploadImage} />
                 <Route path="/login" render={() => (
                   <Login
                     setIsProgressing={setIsProgressing}

@@ -40,7 +40,6 @@ function ForgotPassword(props) {
         sendRequest(path, myInit)
             .then(result => {
                 if (result.error == null) {
-
                     window.alert("Password changed successfully");
                     history.push('/login')
                 } else {
