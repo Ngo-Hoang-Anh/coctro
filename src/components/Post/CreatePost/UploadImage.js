@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-import { Upload, Modal, Button } from 'antd';
+import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { sendRequest } from '../../../common/utility';
 
 function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -12,23 +11,15 @@ function getBase64(file) {
         reader.onerror = error => reject(error);
     });
 }
-const CreatePostPage = () => {
+
+const CreatePostPage = (props) => {
     const [previewVisible, setPreviewVisible] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
-    const [fileList, setFileList] = useState([]);
-    const [newestImg, setNewestImg] = useState([]);
-    useEffect(() => {
-        try {
-            let tempImg = fileList[0].thumbUrl;
-            setNewestImg(tempImg);
-            console.log(tempImg);
-        } catch {
-
-        }
-    }, [[...fileList]]);
     const handleCancel = () => setPreviewVisible(false);
-
+    let fileList = props.fileList;
+    const setFileList = props.setFileList;
+    console.log(fileList);
     const handlePreview = async file => {
         if (!file.url && !file.preview) {
             file.preview = await getBase64(file.originFileObj);
@@ -39,25 +30,6 @@ const CreatePostPage = () => {
     };
 
     const handleChange = ({ fileList }) => setFileList(fileList);
-    const upLoadImg = () => {
-        const path = '/post-manager';
-        console.log(newestImg);
-        const myInit = {
-            method: 'POST',
-            body: JSON.stringify(
-                {
-                    imageList:
-                        [
-                            fileList[0].thumbUrl.slice(`data:image/jpeg;base64,`.length - 1, fileList[0].thumbUrl.length),
-                            fileList[1].thumbUrl.slice(`data:image/jpeg;base64,`.length - 1, fileList[0].thumbUrl.length)
-                        ]
-                }
-            ),
-        }
-        sendRequest(path, myInit).then((result) => {
-            console.log(result);
-        });
-    }
     const uploadButton = (
         <div>
             <PlusOutlined />
@@ -72,10 +44,10 @@ const CreatePostPage = () => {
                 maxCount={10}
                 onPreview={handlePreview}
                 onChange={handleChange}
+
             >
-                {fileList.length >= 8 ? null : uploadButton}
+                {fileList.length < 10 ? uploadButton : null}
             </Upload>
-            <Button onClick={upLoadImg}>Send</Button>
             <Modal
                 visible={previewVisible}
                 title={previewTitle}
@@ -84,11 +56,6 @@ const CreatePostPage = () => {
             >
                 <img alt="example" style={{ width: '100%' }} src={previewImage} />
             </Modal>
-            <img src={newestImg} alt="" />
-            <img src="https://fptu-house-bucket.s3.ap-southeast-1.amazonaws.com/1632923246191.png" alt="" />
-            <img src={newestImg} alt="" />
-
-
         </>
     );
 

@@ -1,8 +1,7 @@
 import React from "react";
-import { List, Card } from 'antd';
+import { List } from 'antd';
 import PostHome from '../Post/PostHome/PostHome';
-
-
+import { HomeFilled, TeamOutlined, AreaChartOutlined, EnvironmentFilled, DollarCircleFilled, ContactsFilled } from '@ant-design/icons';
 const data = [
   {
     title: 'Nhà trọ Xanh Lá',

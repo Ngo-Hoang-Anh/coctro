@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { sendRequest } from "../../../common/utility";
 import { useHistory } from "react-router-dom";
-import "./Post.css";
 
+import "./Post.css";
 import CommonInformation from "./FormInformation/CommonInformation/CommonInformation";
 import DetailInformation from "./FormInformation/DetailInformation/DetailInformation";
 import PostInformation from "./PostInformation/PostInformation";
@@ -74,7 +74,6 @@ function Post(props) {
       },
     },
   };
-
   //Post Type - Start
   const [postType, setPostType] = useState("");
   const valuePostType = ["Tìm ở ghép", "Cho thuê trọ"];
@@ -130,7 +129,10 @@ function Post(props) {
   const onChangeGender = (e) => {
     setGender(e.target.value);
   };
+
   //Gender - End
+  //Address -Start 
+
 
   //Rent Price - Start
   const [rentPrice, setRentPrice] = useState("");
@@ -173,8 +175,8 @@ function Post(props) {
     setOtherPrice(e.target.value)
   }
   //Other Price - End
-
-
+  const [chosenLocation, setChosenLocation] = useState("");
+  //Address-end
   //Utilities - Start
   const utilities = [
     { label: "WC riêng", value: "WC riêng" },
@@ -194,8 +196,13 @@ function Post(props) {
     { label: "Tivi", value: "Tivi" },
     { label: "Ban công", value: "Ban công" },
   ];
+  const [chosenUltilities, setChosenUltilities] = useState([]);
+  const updateUltilities = (checkedValue) => {
+    console.log(checkedValue);
+    setChosenUltilities([...checkedValue]);
+  }
   //Utilities - End
-
+  
   //Phone - Start
 const [phone, setPhone] = useState();
 const onChangePhone = (e) => {
@@ -249,40 +256,67 @@ const onCheckCheckboxConfirm = (e) => {
   setCheckboxConfirm(e.target.value)
 }
   //Checkbox Confirm - End
-  
+
+    
   const onFinish = (values) => {
     //TODO: validate
-    const path = "/post-manager";
+    const path = '/post-manager';
+    let tempFileList = [];
+    for (var i = 0; i < fileList.length; i++) {
+      tempFileList[i] = fileList[i].thumbUrl.slice(`data:image/jpeg;base64,`.length - 1, fileList[i].thumbUrl.length);
+    }
+    let token = window.localStorage.getItem('token').toString();
+    let locationValue = [];
+    const tempLocation = [...chosenLocation];
+    tempLocation.forEach((location) => {
+      locationValue = [...locationValue, location.value];
+    })
+    console.log(locationValue);
     const myInit = {
-      method: "POST",
+      method: 'POST',
+      headers: {
+        'Authorization': token
+      },
+
       body: JSON.stringify({
-        postType: values.postType,
-        roomType: values.roomType,
-        numberRoomAvailable: values.numberRoomAvailable,
-        numberPeoplePerRoom: values.numberPeoplePerRoom,
-        gender: values.gender,
-        deposit: values.deposit,
-        electricPrice: values.electricPrice,
-        waterPrice: values.waterPrice,
-        internetPrice: values.internetPrice,
-        otherPrice: values.otherPrice,
-        location: values.location,
+        post_type: values.postType,
+        post_title: values.postTitle || values.motelName,
+        motel_type: values.motelType,
+        room_available: values.roomAvailable,
+        max_slot_per_room: values.maxSlotPerRoom,
+        room_gender: values.roomGender,
+        room_area: values.roomArea,
+        room_cost: {
+          rental_cost: values.rentalCost,
+          deposit_cost: values.depositCost,
+          electricity_cost: values.electricCost,
+          water_cost: values.waterCost,
+          internet_cost: values.internetCost,
+          clean_cost: values.cleanCost,
+        },
+        contact: {
+          contact_numbers: [values.contactNumbers],
+          contact_name: [values.contactName]
+        },
+        imageList: [...tempFileList],
         utilities: [...chosenUltilities],
-        phone: values.phone,
-        caption: values.caption,
-        description: values.description,
-        strictTime: values.strictTime,
-        StrictTimeStart: values.StrictTimeStart,
-        StrictTimeEnd: values.StrictTimeEnd,
+
+        extra_info: values.extra_info,
+        motel_name: values.motelName,
+        motel_address: [...locationValue],
+        self_governance: isSelfGovernance,
+        // strictTime: values.strictTime,
+        // StrictTimeStart: values.StrictTimeStart,
+        // StrictTimeEnd: values.StrictTimeEnd,
       }),
-    };
-    console.log(myInit.body);
-    sendRequest(path, myInit).then((result) => {
-      if (result.error == null) {
-        window.alert("Error:" + result.error);
-      } else {
-        window.alert("New Post created Successfully");
-        history.push("/home");
+    }
+    sendRequest(path, myInit)
+      .then(result => {
+        if (result.error == null) {
+          window.alert("New Post created Successfully");
+        } else {
+          window.alert("Error:" + result.error);
+        }
       }
     });
   };
@@ -378,7 +412,7 @@ const onCheckCheckboxConfirm = (e) => {
     <div className="container">
       {changeForm(formShow)}
     </div>
+
   );
 }
-
 export default Post;
