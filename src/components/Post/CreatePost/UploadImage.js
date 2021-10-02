@@ -12,14 +12,13 @@ function getBase64(file) {
     });
 }
 
-const CreatePostPage = (props) => {
+const UploadImage = (props) => {
     const [previewVisible, setPreviewVisible] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
     const handleCancel = () => setPreviewVisible(false);
     let fileList = props.fileList;
     const setFileList = props.setFileList;
-    console.log(fileList);
     const handlePreview = async file => {
         if (!file.url && !file.preview) {
             file.preview = await getBase64(file.originFileObj);
@@ -61,4 +60,4 @@ const CreatePostPage = (props) => {
 
 }
 
-export default CreatePostPage;
+export default UploadImage;

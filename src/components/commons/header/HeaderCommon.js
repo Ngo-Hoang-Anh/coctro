@@ -1,48 +1,25 @@
-import React, { useEffect, useState, useRef, Suspense } from "react";
+import React, { useState, Suspense } from "react";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { Menu, Button, Divider } from "antd";
 import { TwitterOutlined } from "@ant-design/icons";
 import "./Header.css";
 
 const Login = React.lazy(() => import('../../Authen/Login/Login'));
-const UploadImage = React.lazy(() => import('../../Post/CreatePost/UploadImage'));
-const ProgressBar = React.lazy(() => import('../ProgressBar/ProgressBar'));
 const Register = React.lazy(() => import('../../Authen/Register/Register'));
 const ForgotPassword = React.lazy(() => import('../../Authen/ForgotPassword/ForgotPassword'));
 const Home = React.lazy(() => import('../../Home/Home'));
 const Error = React.lazy(() => import('../Error/Error'));
-const Post = React.lazy(() => import('../../Post/CreatePost/Post'));
-
+const CreatePost = React.lazy(() => import('./../../Post/CreatePost/CreatePost/CreatePost'));
+const AuthenRequired = React.lazy(() => import('../../Authen/AuthenRequired/AuthenRequired'));
 function HeaderCommon(props) {
   const [token, setToken] = useState(window.localStorage.getItem("token"));
-  const [progress, setProgress] = useState(0);
-  const [isProgressing, setIsProgressing] = useState(false);
   const logout = () => {
-    var cf = window.confirm("Xác nhận đăng xuất");
-    if (cf) {
+    var confirm = window.confirm("Xác nhận đăng xuất");
+    if (confirm) {
       window.localStorage.removeItem("token");
       setToken(null);
     }
   }
-  const timeRef = useRef(0);
-  let interval;
-  useEffect(() => {
-    // console.log("progressing status is:" + isProgressing);
-    if (isProgressing) {
-      timeRef.current = 0;
-      interval = setInterval(() => {
-        if (timeRef.current < 100) {
-          let tempTime = timeRef.current;
-          tempTime += 5;
-          timeRef.current = tempTime;
-          setProgress(timeRef.current);
-        } else {
-          clearInterval(interval);
-        }
-      }, 500);
-    }
-  }, [isProgressing]);
-
   return (
     <div className="container-fluid">
       <div className="header">
@@ -68,31 +45,22 @@ function HeaderCommon(props) {
             </Divider>
           </Menu>
           <Suspense fallback={<div>Loading...</div>}>
-            {
-              (isProgressing) && <ProgressBar progress={progress} />
-            }
             <section>
               <Switch>
                 <Route path="/home" component={Home} />
-                <Route path="/login" render={() => (
-                  <Login
-                    setIsProgressing={setIsProgressing}
-                    setToken={setToken}
-                  />
+                <Route path="/login" render={(props) => (
+                  <Login setToken={setToken} />
                 )} />
                 <Route path="/register" render={(props) => (
                   <Register
-                    setIsProgressing={setIsProgressing}
                   />
                 )} />
                 <Route path="/forgot" render={(props) => (
                   <ForgotPassword
-                    setIsProgressing={setIsProgressing}
                   />
                 )} />
-
-                <Route path="/create-new-post" component={Post} />
-                <Route path="/:somestring" component={Error} />
+                <Route path="/create-new-post" render={(props) => <AuthenRequired setToken={setToken} requestedComponent={CreatePost} />} />
+                < Route path="/:somestring" component={Error} />
               </Switch>
             </section>
           </Suspense>

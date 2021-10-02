@@ -3,9 +3,8 @@ import './App.css';
 import 'antd/dist/antd.css';
 import { Layout } from "antd";
 import HeaderCommon from "./components/commons/Header/HeaderCommon";
-import FooterCommon from "./components/commons/Footer/FooterCommon";
 
-const { Header, Footer } = Layout;
+const { Header } = Layout;
 
 function App() {
   return (

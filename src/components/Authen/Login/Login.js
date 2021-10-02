@@ -18,17 +18,14 @@ const Login = (props) => {
       }),
     };
 
-    props.setIsProgressing(true);
     sendRequest(path, myInit).then((result) => {
-
       if (result.error == null) {
         window.localStorage.setItem("token", result.token);
         props.setToken(result.token);
-        history.push("/home");
+        history.push('/home');
       } else {
         window.alert(result.error);
       }
-      setTimeout(() => props.setIsProgressing(false), 2000);
     });
     //set time out for testing purpose
   }
@@ -90,13 +87,13 @@ const Login = (props) => {
 
           <Form.Item>
             <div className="button-login">
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button"
-            >
-              <span id="button-login">Đăng nhập</span>
-            </Button>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="login-form-button"
+              >
+                <span id="button-login">Đăng nhập</span>
+              </Button>
             </div>
           </Form.Item>
           <Form.Item>
@@ -109,7 +106,7 @@ const Login = (props) => {
           <Form.Item>
             <div className="link-to-register">
               <p>Chưa có tài khoản?<a href="/register"> Đăng kí ngay</a></p>
-              
+
             </div>
           </Form.Item>
         </Form>

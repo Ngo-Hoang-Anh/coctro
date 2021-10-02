@@ -14,7 +14,7 @@ async function getLocationTree() {
     return result;
 }
 
-export const LocationPicker = (props) => {
+const LocationPicker = (props) => {
     const setChosenLocation = props.setChosenLocation;
     const [locations, setLocations] = useState([]);
     async function loadLocation() {
@@ -50,8 +50,17 @@ export const LocationPicker = (props) => {
     }, []);
 
     return <>
-        <Cascader onChange={(value, selectedOptions) => {
-            setChosenLocation(selectedOptions);
-        }} options={locations} />
+        <Cascader
+            onChange={(value, selectedOptions) => {
+                let tempLocation = [];
+                selectedOptions.forEach((option) => {
+                    tempLocation = [...tempLocation, option.value];
+                })
+                setChosenLocation(tempLocation);
+            }}
+            options={locations}
+            defaultValue={[...props.chosenLocation]}
+        />
     </>
 }
+export default LocationPicker;
