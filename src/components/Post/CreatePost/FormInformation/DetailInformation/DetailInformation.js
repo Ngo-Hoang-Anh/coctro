@@ -1,101 +1,89 @@
-import React from "react";
-import { Form, Input, Cascader, Checkbox, Button } from "antd";
+import React, { useState } from "react";
+import { Form, Input, Checkbox, Button, Modal } from "antd";
 import "../CommonInformation.css";
 
+const UploadImage = React.lazy(() => import('../../UploadImage'));
+const LocationPicker = React.lazy(() => import('../../../../commons/LocationPicker/LocationPicker'));
+
 function DetailInformation(props) {
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const roomType = props.roomType;
+  let unitPrice = "VNĐ/người";
+  if (roomType === "Ký túc xá") {
+    unitPrice = "(đơn vị:VND/người)";
+  } else if (roomType === "Phòng trọ cho thuê") {
+    unitPrice = "(đơn vị: VND/phòng)";
+  } else if (roomType === "Nhà nguyên căn" || roomType === "Chung cư mini") {
+    unitPrice = "(đơn vị: VND/căn)";
+  } else {
+    unitPrice = "";
+  }
   return (
-    <div className="container-detail-information">
+    <div className="container-create-post">
       <Form {...props.formItemLayout}>
-        <h1>Thông tin chi tiết:</h1>
+        <span id="span-title">Thông tin chi tiết:</span><br/><br/><br/>
         <Form.Item
-          name="price"
-          label={props.priceUnit}
-          rules={[
-            {
-              required: true,
-              message: "Hãy nhập giá cho thuê!",
-            },
-          ]}
+          label={"Giá cho thuê" + unitPrice + ":"}
         >
-          
-          <Input value={props.rentPrice} defaultValue={props.rentPrice} onChange={props.onChangeRentPrice}/>
+          <Input value={props.rentPrice} defaultValue={props.rentPrice} onChange={(e) => props.setRentPrice(e.target.value)} />
         </Form.Item>
         <Form.Item name="deposit" label="Giá tiền đặt cọc">
-          <Input value={props.deposit} defaultValue={props.deposit} onChange={props.onChangeDeposot}/>
+          <Input value={props.deposit} defaultValue={props.deposit} onChange={(e) => props.setDeposit(e.target.value)} />
         </Form.Item>
         <Form.Item
-          name="electricPrice"
           label="Giá điện (đơn vị nghìn VND/số)"
-          rules={[
-            {
-              message: "Hãy nhập giá điện!",
-            },
-          ]}
         >
-          <Input value={props.electricPrice} defaultValue={props.electricPrice} onChange={props.onChangeElectricPrice}/>
+          <Input value={props.electricPrice} defaultValue={props.electricPrice}
+            onChange={(e) => props.setElectricPrice(e.target.value)} />
         </Form.Item>
         <Form.Item
-          name="waterPrice"
           label="Giá nước"
-          rules={[
-            {
-              message: "Hãy nhập giá nước!",
-            },
-          ]}
         >
-          <Input value={props.waterPrice} defaultValue={props.waterPrice} onChange={props.onChangeWaterPrice}/>
+          <Input value={props.waterPrice} defaultValue={props.waterPrice}
+            onChange={(e) => props.setWaterPrice(e.target.value)} />
         </Form.Item>
         <Form.Item
-          name="internetPrice"
           label="Giá internet/truyền hình cáp"
-          rules={[
-            {
-              message: "Hãy nhập giá internet/truyền hình cáp!",
-            },
-          ]}
         >
-          <Input value={props.internetPrice} defaultValue={props.internetPrice} onChange={props.onChangeInternetPrice}/>
+          <Input value={props.internetPrice} defaultValue={props.internetPrice}
+            onChange={(e) => props.setInternetPrice(e.target.value)} />
         </Form.Item>
-        <Form.Item name="otherPrice" label="Giá chi phí khác">
-          <Input value={props.otherPrice} defaultValue={props.otherPrice} onChange={props.onChangeOtherPrice}/>
+        <Form.Item name="cleanCost" label="Giá chi phí khác">
+          <Input value={props.cleanPrice} defaultValue={props.cleanPrice}
+            onChange={(e) => props.setCleanPrice(e.target.value)} />
         </Form.Item>
         <Form.Item
-          name="location"
           label="Địa chỉ"
-          rules={[
-            {
-              type: "array",
-              required: true,
-              message: "Hãy nhập địa chỉ khu trọ của bạn!",
-            },
-          ]}
         >
-          <Cascader options={props.residences} /> cần thống nhất với AN làm cái này
+          <LocationPicker chosenLocation={[...props.chosenLocation]} setChosenLocation={props.setChosenLocation} />
         </Form.Item>
-        <Form.Item
-          name="image"
-          label="Hình ảnh"
-          rules={[
-            {
-              required: false,
-              message: "Hãy tải ít nhất 4 hình ảnh lên!",
-            },
-          ]}
-        ></Form.Item>
-        <Form.Item name="utilities" label="Tiện ích">
+        <Form.Item  {...props.tailFormItemLayout}>
+          <p>{props.fileList.length} ảnh đã tải lên</p>
+          <Button type="primary" onClick={() => setIsModalVisible(true)}>
+            Tải ảnh lên
+          </Button>
+          <Modal title="Basic Modal"
+            visible={isModalVisible}
+            onOk={() => setIsModalVisible(false)}
+            onCancel={() => setIsModalVisible(false)}>
+            <UploadImage fileList={[...props.fileList]} setFileList={props.setFileList} />
+          </Modal>
+        </Form.Item>
+        <Form.Item label="Tiện ích">
           <Checkbox.Group
+          id="checkbox-utilities"
             options={props.utilities}
-            onChange={props.onChangeUltilities}
-            value={[...props.chosenUltilities]}
-            defaultValue={[...props.chosenUltilities]}
+            onChange={(checkedValue) => props.setChosenUtilities(checkedValue)}
+            defaultValue={[...props.chosenUtilities]}
           />
-          {console.log(props.chosenUltilities + " mamam")}
-          {/* tại sao phải có câu lệnh này mới chay. lẽ nào do props.chosenUltilities */}
-          Xoa dong nay di nha
         </Form.Item>
-        <Form.Item {...props.tailFormItemLayout}>
-          <Button
+        <br/>
+        <div id="button">
+        <Button
             type="primary"
+            id="button-back"
             onClick={(e) => props.nextBack("common-information")}
           >
             Quay lại
@@ -106,7 +94,7 @@ function DetailInformation(props) {
           >
             Tiếp theo
           </Button>
-        </Form.Item>
+        </div>
       </Form>
     </div>
   );

@@ -16,7 +16,6 @@ function ForgotPassword(props) {
                 email: values.email
             }),
         }
-        props.setIsProgressing(true);
         setCurrentEmail(values.email);
         sendRequest(path, myInit).then((result) => {
             if (result.error == null) {
@@ -24,7 +23,6 @@ function ForgotPassword(props) {
             } else {
                 window.alert("Error:" + result.error);
             }
-            setTimeout(() => props.setIsProgressing(false), 2000);
         });
     };
     const confirmOTP = (values) => {

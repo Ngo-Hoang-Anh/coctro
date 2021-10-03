@@ -1,7 +1,6 @@
 import React from "react";
 import { List } from 'antd';
 import PostHome from '../Post/PostHome/PostHome';
-import { HomeFilled, TeamOutlined, AreaChartOutlined, EnvironmentFilled, DollarCircleFilled, ContactsFilled } from '@ant-design/icons';
 const data = [
   {
     title: 'Nhà trọ Xanh Lá',
@@ -66,12 +65,12 @@ const data = [
 ];
 
 function Home(props) {
-    return <List
+  return <List
     dataSource={data}
     renderItem={item => (
       <List.Item>
-        <PostHome src={item.src} title={item.title} room_type={item.room_type} gender={item.gender} area={item.area} location={item.location} price={item.price} roomAvailable={item.roomAvailable}/>
-    </List.Item>
+        <PostHome src={item.src} title={item.title} room_type={item.room_type} gender={item.gender} area={item.area} location={item.location} price={item.price} roomAvailable={item.roomAvailable} />
+      </List.Item>
     )}
   />;
 }

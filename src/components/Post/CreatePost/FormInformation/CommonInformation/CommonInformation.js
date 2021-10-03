@@ -1,13 +1,13 @@
 import React from "react";
 import "../CommonInformation.css";
 
-import { Form, Radio, InputNumber, Button } from "antd";
+import { Form, Radio, InputNumber, Button, Input } from "antd";
 
 function CommonInformation(props) {
   return (
-    <div className="container-common-information">
+    <div className="container-create-post">
       <Form {...props.formItemLayout}>
-        <h1>Thông tin chung:</h1>
+        <span id="span-title">Thông tin chung:</span><br/><br/><br/>
         <Form.Item
           name="postType"
           label="Loại hình"
@@ -20,26 +20,42 @@ function CommonInformation(props) {
         >
           <Radio.Group
             options={props.valuePostType}
-            onChange={props.onChangePostType}
+            onChange={(e) => props.setPostType(e.target.value)}
             value={props.postType}
             defaultValue={props.postType}
           />
         </Form.Item>
         <Form.Item
           name="roomType"
-          label="Hình thức trọ"
+          label="Loại phòng"
           rules={[
             {
               required: true,
-              message: "Hãy chọn hình thức trọ!",
+              message: "Hãy chọn loại phòng!",
             },
           ]}
         >
           <Radio.Group
             options={props.valueRoomType}
-            onChange={props.onChangeRoomType}
+            onChange={(e) => props.setRoomType(e.target.value)}
             value={props.roomType}
             defaultValue={props.roomType}
+          />
+        </Form.Item>
+        <Form.Item
+          name="name"
+          label="Tên trọ:"
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập tên trọ",
+            },
+          ]}
+        >
+          <Input
+            value={props.roomName}
+            defaultValue={props.roomName}
+            onChange={(e) => props.setRoomName(e.target.value)}
           />
         </Form.Item>
         <Form.Item
@@ -56,7 +72,7 @@ function CommonInformation(props) {
             min={0}
             value={props.numberRoomAvailable}
             defaultValue={props.numberRoomAvailable}
-            onChange={props.onChangeNumberRoomAvaiable}
+            onChange={(value) => props.setNumberRoomAvailable(value)}
           />
         </Form.Item>
         <Form.Item
@@ -73,7 +89,24 @@ function CommonInformation(props) {
             min={1}
             value={props.numberPeoplePerRoom}
             defaultValue={props.numberPeoplePerRoom}
-            onChange={props.onChangeNumberPersonPerRoom}
+            onChange={(value) => props.setNumberPeoplePerRoom(value)}
+          />
+        </Form.Item>
+        <Form.Item
+          name="area"
+          label="Diện tích (đơn vị: m2):"
+          rules={[
+            {
+              type: "number",
+              required: true,
+              message: "Hãy nhập diện tích phòng",
+            },
+          ]}
+        >
+          <Input
+            value={props.area}
+            defaultValue={props.area}
+            onChange={(e) => props.setArea(e.target.value)}
           />
         </Form.Item>
         <Form.Item
@@ -88,20 +121,21 @@ function CommonInformation(props) {
         >
           <Radio.Group
             options={props.valueGender}
-            onChange={props.onChangeGender}
+            onChange={(e) => props.setGender(e.target.value)}
             value={props.gender}
             defaultValue={props.gender}
           />
         </Form.Item>
 
-        <Form.Item {...props.tailFormItemLayout}>
+        <br/>
+        <div id="button">
           <Button
             type="primary"
             onClick={(e) => props.nextBack("detail-information")}
           >
             Tiếp theo
           </Button>
-        </Form.Item>
+          </div>
       </Form>
     </div>
   );
