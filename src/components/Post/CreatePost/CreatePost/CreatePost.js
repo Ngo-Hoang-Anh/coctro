@@ -2,9 +2,15 @@ import React, { useState, Suspense } from "react";
 import { sendRequest } from "../../../../common/utility";
 
 import "./CreatePost.css";
-const CommonInformation = React.lazy(() => import("../FormInformation/CommonInformation/CommonInformation"));
-const DetailInformation = React.lazy(() => import("../FormInformation/DetailInformation/DetailInformation"));
-const PostInformation = React.lazy(() => import("../FormInformation/PostInformation/PostInformation"));
+const CommonInformation = React.lazy(() =>
+  import("../FormInformation/CommonInformation/CommonInformation")
+);
+const DetailInformation = React.lazy(() =>
+  import("../FormInformation/DetailInformation/DetailInformation")
+);
+const PostInformation = React.lazy(() =>
+  import("../FormInformation/PostInformation/PostInformation")
+);
 function Post(props) {
   const formItemLayout = {
     labelCol: {
@@ -38,7 +44,7 @@ function Post(props) {
   };
   //Post Type - Start
   const [postType, setPostType] = useState("");
-  const valuePostType = ["Tìm ở ghép", "Cho thuê trọ", "Tìm trọ"];
+  const valuePostType = ["Tìm ở ghép", "Cho thuê trọ"];
   //Post Type - End
   //Room Type - Start
   const [roomType, setRoomType] = useState("");
@@ -50,21 +56,21 @@ function Post(props) {
   ];
   //Room Type - End
   //Number Room Name - Start
-  const [roomName, setRoomName] = useState("")
+  const [roomName, setRoomName] = useState("");
   //Number Room Name - End
   //Number Room Available - Start
-  const [numberRoomAvailable, setNumberRoomAvailable] = useState(3)
+  const [numberRoomAvailable, setNumberRoomAvailable] = useState(3);
   //Number Room Available - End
   //Number Person Per Room - Start
-  const [numberPeoplePerRoom, setNumberPeoplePerRoom] = useState(2)
+  const [numberPeoplePerRoom, setNumberPeoplePerRoom] = useState(2);
   //Number Person Per Room - End
   //Gender - Start
   const [gender, setGender] = useState("");
   const valueGender = ["Tất cả", "Nam", "Nữ"];
   //Gender - End
-  //Address -Start 
+
   //Rent Price - Start
-  const [rentPrice, setRentPrice] = useState("");
+  const [rentPrice, setRentPrice] = useState([0.5, 2]);
   //Rent Price - End
   //Deposit - Start
   const [deposit, setDeposit] = useState("");
@@ -81,7 +87,9 @@ function Post(props) {
   //clean Price - Start
   const [cleanPrice, setCleanPrice] = useState("");
   //clean Price - End
+  //Address -Start
   const [chosenLocation, setChosenLocation] = useState([]);
+  const [detailAddress, setDetailAddress] = useState("");
   //Address-end
   //Utilities - Start
   const utilities = [
@@ -119,7 +127,6 @@ function Post(props) {
   //Description - End
 
   //Strict Time - Start
-  const [isSelfGovernance, setSelfGovernance] = useState(false)
   const [strictTime, setStrictTime] = useState("");
   const [strictTimeStart, setStrictTimeStart] = useState("");
   const [strictTimeEnd, setStrictTimeEnd] = useState("");
@@ -136,16 +143,19 @@ function Post(props) {
 
   const onFinish = (values) => {
     //TODO: validate
-    const path = '/post-manager';
+    const path = "/post-manager";
     let tempFileList = [];
     for (var i = 0; i < fileList.length; i++) {
-      tempFileList[i] = fileList[i].thumbUrl.slice(`data:image/jpeg;base64,`.length - 1, fileList[i].thumbUrl.length);
+      tempFileList[i] = fileList[i].thumbUrl.slice(
+        `data:image/jpeg;base64,`.length - 1,
+        fileList[i].thumbUrl.length
+      );
     }
-    let token = window.localStorage.getItem('token').toString();
+    let token = window.localStorage.getItem("token").toString();
     const myInit = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Authorization': token
+        Authorization: token,
       },
 
       body: JSON.stringify({
@@ -166,7 +176,7 @@ function Post(props) {
         },
         contact: {
           contact_numbers: [phone],
-          contact_name: [contact]
+          contact_name: [contact],
         },
         imageList: [...tempFileList],
         utilities: [...chosenUtilities],
@@ -174,21 +184,18 @@ function Post(props) {
         extra_info: description,
         motel_name: roomName,
         motel_address: [...chosenLocation],
-        self_governance: isSelfGovernance,
         strictTime: strictTime,
         StrictTimeStart: strictTimeStart,
-        StrictTimeEnd: strictTimeEnd
+        StrictTimeEnd: strictTimeEnd,
       }),
-    }
-    sendRequest(path, myInit)
-      .then(result => {
-        if (result.error == null) {
-          window.alert("New Post created Successfully");
-        } else {
-          window.alert("Error:" + result.error);
-        }
+    };
+    sendRequest(path, myInit).then((result) => {
+      if (result.error == null) {
+        window.alert("New Post created Successfully");
+      } else {
+        window.alert("Error:" + result.error);
       }
-      );
+    });
   };
   const [formShow, setFormShow] = useState("common-information");
   const changeForm = (formShowTmp) => {
@@ -248,6 +255,8 @@ function Post(props) {
             setFileList={setFileList}
             setChosenLocation={setChosenLocation}
             chosenLocation={[...chosenLocation]}
+            detailAddress={detailAddress}
+            setDetailAddress={setDetailAddress}
           />
         </Suspense>
       );
@@ -274,8 +283,6 @@ function Post(props) {
           setStrictTimeStart={setStrictTimeStart}
           setStrictTimeEnd={setStrictTimeEnd}
           tailFormItemLayout={tailFormItemLayout}
-          isSelfGovernance={isSelfGovernance}
-          setSelfGovernance={setSelfGovernance}
           nextBack={nextBack}
         />
       </Suspense>
@@ -283,21 +290,16 @@ function Post(props) {
   };
 
   const nextBack = function (visit) {
-    if (visit === 'detail-information') {
+    if (visit === "detail-information") {
       setFormShow("detail-information");
     }
-    if (visit === 'common-information') {
+    if (visit === "common-information") {
       setFormShow("common-information");
     }
-    if (visit === 'post-information') {
+    if (visit === "post-information") {
       setFormShow("post-information");
     }
-  }
-  return (
-    <div className="container">
-      {changeForm(formShow)}
-    </div>
-
-  );
+  };
+  return <div className="container">{changeForm(formShow)}</div>;
 }
 export default Post;

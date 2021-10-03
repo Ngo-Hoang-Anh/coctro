@@ -51,6 +51,7 @@ const LocationPicker = (props) => {
 
     return <>
         <Cascader
+            placeholder="Quận,Huyện/Phường,Xã"
             onChange={(value, selectedOptions) => {
                 let tempLocation = [];
                 selectedOptions.forEach((option) => {
