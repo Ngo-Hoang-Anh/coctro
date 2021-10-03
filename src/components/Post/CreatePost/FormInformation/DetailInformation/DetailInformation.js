@@ -21,9 +21,9 @@ function DetailInformation(props) {
     unitPrice = "";
   }
   return (
-    <div className="container-common-information">
+    <div className="container-create-post">
       <Form {...props.formItemLayout}>
-        <h1>Thông tin chi tiết:</h1>
+        <span id="span-title">Thông tin chi tiết:</span><br/><br/><br/>
         <Form.Item
           label={"Giá cho thuê" + unitPrice + ":"}
         >
@@ -73,14 +73,17 @@ function DetailInformation(props) {
         </Form.Item>
         <Form.Item label="Tiện ích">
           <Checkbox.Group
+          id="checkbox-utilities"
             options={props.utilities}
             onChange={(checkedValue) => props.setChosenUtilities(checkedValue)}
             defaultValue={[...props.chosenUtilities]}
           />
         </Form.Item>
-        <Form.Item {...props.tailFormItemLayout}>
-          <Button
+        <br/>
+        <div id="button">
+        <Button
             type="primary"
+            id="button-back"
             onClick={(e) => props.nextBack("common-information")}
           >
             Quay lại
@@ -91,7 +94,7 @@ function DetailInformation(props) {
           >
             Tiếp theo
           </Button>
-        </Form.Item>
+        </div>
       </Form>
     </div>
   );

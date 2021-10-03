@@ -5,9 +5,9 @@ import { Form, Radio, InputNumber, Button, Input } from "antd";
 
 function CommonInformation(props) {
   return (
-    <div className="container-common-information">
+    <div className="container-create-post">
       <Form {...props.formItemLayout}>
-        <h1>Thông tin chung:</h1>
+        <span id="span-title">Thông tin chung:</span><br/><br/><br/>
         <Form.Item
           name="postType"
           label="Loại hình"
@@ -97,6 +97,7 @@ function CommonInformation(props) {
           label="Diện tích (đơn vị: m2):"
           rules={[
             {
+              type: "number",
               required: true,
               message: "Hãy nhập diện tích phòng",
             },
@@ -126,14 +127,15 @@ function CommonInformation(props) {
           />
         </Form.Item>
 
-        <Form.Item {...props.tailFormItemLayout}>
+        <br/>
+        <div id="button">
           <Button
             type="primary"
             onClick={(e) => props.nextBack("detail-information")}
           >
             Tiếp theo
           </Button>
-        </Form.Item>
+          </div>
       </Form>
     </div>
   );

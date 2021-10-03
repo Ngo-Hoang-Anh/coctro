@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Input, Button, Radio, Checkbox } from "antd";
+import "../CommonInformation.css";
 
 const { TextArea } = Input;
 
@@ -12,7 +13,7 @@ function PostInformation(props) {
         name="post"
         onFinish={props.onFinish}
       >
-        <h1>Thông tin bài đăng:</h1>
+        <span id="span-title">Thông tin bài đăng:</span><br/><br/><br/>
         <Form.Item
           name="contact"
           label="Người liên hệ"
@@ -35,15 +36,6 @@ function PostInformation(props) {
           <TextArea rows={4} value={props.description}
             defaultValue={props.description}
             onChange={(e) => props.setDescription(e.target.value)} />
-        </Form.Item>
-
-        <Form.Item  {...props.tailFormItemLayout}>
-          <Checkbox defaultChecked={props.isSelfGovernance}
-            onChange={(e) => {
-              props.setSelfGovernance(e.target.checked)
-            }}>
-            Trọ tự quản
-          </Checkbox>
         </Form.Item>
 
         {
@@ -90,15 +82,17 @@ function PostInformation(props) {
             Tôi đã đọc kĩ thông tin
           </Checkbox>
         </Form.Item>
-        <Form.Item {...props.tailFormItemLayout}>
-          <Button type="primary"
+        <br/>
+        <div id="button">
+        <Button type="primary"
+          id="button-back"
             onClick={(e) => props.nextBack('detail-information')}>
             Quay lại
           </Button>
           <Button type="primary" htmlType="submit">
             Đăng bài
           </Button>
-        </Form.Item>
+        </div>
       </Form>
     </div>
   );

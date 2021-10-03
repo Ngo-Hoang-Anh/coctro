@@ -1,11 +1,23 @@
-.container-common-information, .container-detail-information {
+.container-create-post {
   background: white;
-  padding: 50px;
+  padding: 40px;
   width: 800px;
   background: white;
   border-radius: 15px;
   margin: auto;
   font-family: "Bookman";
   font-size: 20px;
+}
+
+#span-title {
+  font-size: 30px;
+}
+
+#button {
+  text-align: center;
+}
+
+#button #button-back {
+  margin-right: 200px;
 }
 /*# sourceMappingURL=CommonInformation.css.map */
