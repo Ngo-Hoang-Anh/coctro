@@ -6,7 +6,6 @@ import {
   TeamOutlined,
   AreaChartOutlined,
   EnvironmentFilled,
-  DollarCircleFilled,
   ContactsFilled,
 } from "@ant-design/icons";
 
@@ -28,27 +27,25 @@ function PostHome(props) {
       <div className="posthome-information">
         <div id="posthome-title">{title}</div>
         <div>
-          <HomeFilled id="icon-room"/>
+          <HomeFilled id="icon-room" />
           {room_type}
         </div>
         <div>
-          <TeamOutlined id="icon-gender"/>
+          <TeamOutlined id="icon-gender" />
           {gender}
-          <AreaChartOutlined id="icon-area"/>
+          <AreaChartOutlined id="icon-area" />
           {area}
         </div>
         <div>
-        <ContactsFilled id="icon-room-available"/>
-        {roomAvailable} phòng trống
+          <ContactsFilled id="icon-room-available" />
+          {roomAvailable} phòng trống
         </div>
         <div>
-          <EnvironmentFilled id="icon-location"/>
+          <EnvironmentFilled id="icon-location" />
           {location}
         </div>
       </div>
-      <div id="posthome-price">
-        {price}
-      </div>
+      <div id="posthome-price">{price}</div>
     </div>
   );
 }
