@@ -22,7 +22,7 @@ const Login = (props) => {
       if (result.error == null) {
         window.localStorage.setItem("token", result.token);
         props.setToken(result.token);
-        history.push('/home');
+        history.push("/home");
       } else {
         window.alert(result.error);
       }
@@ -105,8 +105,9 @@ const Login = (props) => {
           </Form.Item>
           <Form.Item>
             <div className="link-to-register">
-              <p>Chưa có tài khoản?<a href="/register"> Đăng kí ngay</a></p>
-
+              <p>
+                Chưa có tài khoản?<a href="/register"> Đăng kí ngay</a>
+              </p>
             </div>
           </Form.Item>
         </Form>

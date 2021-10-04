@@ -11,6 +11,7 @@ const ForgotPassword = React.lazy(() =>
 );
 const Home = React.lazy(() => import("../../Home/Home"));
 const Error = React.lazy(() => import("../Error/Error"));
+const ManagerPost = React.lazy(() => import("../../Post/ManagerPost/ManagerPost"));
 const CreatePost = React.lazy(() =>
   import("./../../Post/CreatePost/CreatePost/CreatePost")
 );
@@ -52,6 +53,9 @@ function HeaderCommon(props) {
               <Menu.Item key="createNewPost" style={{ display: "inline-flex" }}>
                 <Link to="/create-new-post">Tạo bài đăng</Link>
               </Menu.Item>
+              <Menu.Item key="managerPost" style={{ display: "inline-flex" }}>
+                <Link to="/manager-post">Quản lý bài đăng</Link>
+              </Menu.Item>
             </Divider>
             <Divider orientation="right">
               {!token ? (
@@ -86,6 +90,10 @@ function HeaderCommon(props) {
                       requestedComponent={CreatePost}
                     />
                   )}
+                />
+                <Route
+                  path="/manager-post"
+                  render={(props) => <ManagerPost />}
                 />
                 <Route path="/:somestring" component={Error} />
               </Switch>
