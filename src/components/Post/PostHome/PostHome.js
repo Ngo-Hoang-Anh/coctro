@@ -1,5 +1,6 @@
 import React from "react";
 import { Image } from "antd";
+import "./PostHome.css";
 import {
   HomeFilled,
   TeamOutlined,
@@ -21,27 +22,33 @@ function PostHome(props) {
     roomAvailable,
   } = props;
   return (
-    <div>
-      <Image width={200} src={src} />
-      {title}
-      <br />
-      <HomeFilled />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{room_type}
-      <br />
-      <TeamOutlined />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{gender}
-      <br />
-      <AreaChartOutlined />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{area}
-      <br />
-      <EnvironmentFilled />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{location}
-      <br />
-      <DollarCircleFilled />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{price}
-      <br />
-      <ContactsFilled />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{roomAvailable} phòng trống
+    <div className="posthome-contain">
+      <Image width={200} src={src} id="image" />
+
+      <div className="posthome-information">
+        <div id="posthome-title">{title}</div>
+        <div>
+          <HomeFilled id="icon-room"/>
+          {room_type}
+        </div>
+        <div>
+          <TeamOutlined id="icon-gender"/>
+          {gender}
+          <AreaChartOutlined id="icon-area"/>
+          {area}
+        </div>
+        <div>
+        <ContactsFilled id="icon-room-available"/>
+        {roomAvailable} phòng trống
+        </div>
+        <div>
+          <EnvironmentFilled id="icon-location"/>
+          {location}
+        </div>
+      </div>
+      <div id="posthome-price">
+        {price}
+      </div>
     </div>
   );
 }
