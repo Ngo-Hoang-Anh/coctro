@@ -19,6 +19,10 @@ const AuthenRequired = React.lazy(() =>
   import("../../Authen/AuthenRequired/AuthenRequired")
 );
 
+const UpdatePost = React.lazy(() => 
+  import("../../Post/UpdatePost/UpdatePost")
+);
+
 function HeaderCommon(props) {
   const [token, setToken] = useState(window.localStorage.getItem("token"));
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -56,6 +60,9 @@ function HeaderCommon(props) {
               <Menu.Item key="managerPost" style={{ display: "inline-flex" }}>
                 <Link to="/manager-post">Quản lý bài đăng</Link>
               </Menu.Item>
+              <Menu.Item key="updatePost" style={{ display: "inline-flex" }}>
+                <Link to="/update-post">Update post</Link>
+              </Menu.Item>
             </Divider>
             <Divider orientation="right">
               {!token ? (
@@ -75,6 +82,7 @@ function HeaderCommon(props) {
           <Suspense fallback={<div>Loading...</div>}>
             <section>
               <Switch>
+                <Route path="/update-post" component={UpdatePost}/>
                 <Route path="/home" component={Home} />
                 <Route
                   path="/login"

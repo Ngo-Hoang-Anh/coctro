@@ -1,4 +1,4 @@
-.container {
+.container-register {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -13,9 +13,10 @@
   background: #fe762c;
   font-family: "Bookman";
   margin-top: 10px;
+  text-align: center;
 }
 
-.container .container-form-register {
+.container-register .container-form-register {
   width: 100%;
   max-width: 400px;
   background-color: #fff;
@@ -25,18 +26,29 @@
           box-shadow: 0px 2px 64px rgba(0, 0, 0, 0.2);
 }
 
-.container #logo {
+.container-register #logo {
   width: 400px;
   margin-right: 200px;
 }
 
-.container .email-register, .container .fullname, .container .phone, .container .password, .container .confirm-password, .container .button-register {
+.container-register .email-register, .container-register .fullname, .container-register .phone, .container-register .password, .container-register .confirm-password, .container-register .button-register {
   width: 300px;
   text-align: center;
   font-size: 18px;
+  margin-left: 47px;
 }
 
-.container .change-to-login {
+.container-register .change-to-login {
+  text-align: center;
+}
+
+.container-register .login-label {
+  margin-top: 30px;
+  font-size: 30px;
+  text-align: center;
+}
+
+.container-register .email-register {
   text-align: center;
 }
 /*# sourceMappingURL=Register.css.map */

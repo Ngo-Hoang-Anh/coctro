@@ -1,4 +1,4 @@
-.container-create-post {
+.container-update-post {
   background: white;
   padding: 40px;
   width: 800px;
@@ -19,4 +19,8 @@
 #button #button-back {
   margin-right: 200px;
 }
-/*# sourceMappingURL=CommonInformation.css.map */
+
+.container {
+  background: #fe762c;
+}
+/*# sourceMappingURL=UpdatePost.css.map */
