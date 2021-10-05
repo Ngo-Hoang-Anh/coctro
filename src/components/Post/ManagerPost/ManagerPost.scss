@@ -1,34 +1,27 @@
+$header-height: 64px;
+$button-height: 35px;
+$button-width: 150px;
+
+.left-sider {
+  display: flex;
+  flex-direction: column !important;
+  padding-left: 10px;
+  margin-top: $header-height;
+}
+
 .manager-post-container {
-    //background: #fe762c;
-}
-
-.slide-post-status {
+  display: flex;
+  flex-direction: row;
+  .extension-button {
+    margin: 10px;
+    width: $button-width;
+    height: $button-height;
+  }
+  .slide-post-status {
     width: 720px;
-}
+  }
 
-.ant-layout-sider-dark {
-    background: white;
-    width: 500px;
+  .post-home-container {
+    width: 1000px;
+  }
 }
-
-.breadcrumb {
-    margin-left: 80px;
-    margin-top: 30px;
-    margin-bottom: 20px;
-}
-
-.manager-post-layout {
-    margin-top: 30px;
-    margin-left: 80px;
-    margin-right: 80px;
-    background: white;
-}
-
-.manager-post-option {
-    width: 500px;
-}
-
-.manager-post-container-detail {
-    width: 1500px;
-}
-

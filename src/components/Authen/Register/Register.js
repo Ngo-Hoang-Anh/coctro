@@ -1,7 +1,12 @@
 import React from "react";
 
 import { Form, Input, Button, Image } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  MailOutlined,
+  LockOutlined,
+  UnlockOutlined,
+} from "@ant-design/icons";
 import { sendRequest } from "../../../common/utility";
 import { useHistory } from "react-router-dom";
 
@@ -18,7 +23,6 @@ const Register = () => {
         email: values.email,
         password: values.password,
         fullName: values.fullName,
-        phone: values.phone,
       }),
     };
     sendRequest(path, myInit).then((result) => {
@@ -55,7 +59,10 @@ const Register = () => {
             ]}
           >
             <div className="email-register">
-              <Input placeholder="Email" />
+              <Input
+                prefix={<MailOutlined className="site-form-item-icon" />}
+                placeholder="Email"
+              />
             </div>
           </Form.Item>
           <Form.Item
@@ -75,19 +82,6 @@ const Register = () => {
             </div>
           </Form.Item>
           <Form.Item
-            name="phone"
-            rules={[
-              {
-                required: true,
-                message: "Hãy nhập số điện thoại!",
-              },
-            ]}
-          >
-            <div className="phone">
-              <Input placeholder="Số điện thoại" />
-            </div>
-          </Form.Item>
-          <Form.Item
             name="password"
             rules={[
               {
@@ -98,7 +92,10 @@ const Register = () => {
             hasFeedback
           >
             <div className="password">
-              <Input.Password placeholder="Mật khẩu" />
+              <Input.Password
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                placeholder="Mật khẩu"
+              />
             </div>
           </Form.Item>
 
@@ -125,7 +122,10 @@ const Register = () => {
             ]}
           >
             <div className="confirm-password">
-              <Input.Password placeholder="Xác nhận mật khẩu" />
+              <Input.Password
+                prefix={<UnlockOutlined className="site-form-item-icon" />}
+                placeholder="Xác nhận mật khẩu"
+              />
             </div>
           </Form.Item>
           <Form.Item>
@@ -135,7 +135,7 @@ const Register = () => {
                 htmlType="submit"
                 className="login-form-button"
               >
-                Đăng kí
+                Đăng ký
               </Button>
             </div>
           </Form.Item>

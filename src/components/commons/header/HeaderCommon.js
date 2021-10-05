@@ -11,7 +11,9 @@ const ForgotPassword = React.lazy(() =>
 );
 const Home = React.lazy(() => import("../../Home/Home"));
 const Error = React.lazy(() => import("../Error/Error"));
-const ManagerPost = React.lazy(() => import("../../Post/ManagerPost/ManagerPost"));
+const ManagerPost = React.lazy(() =>
+  import("../../Post/ManagerPost/ManagerPost")
+);
 const CreatePost = React.lazy(() =>
   import("./../../Post/CreatePost/CreatePost/CreatePost")
 );
@@ -19,9 +21,7 @@ const AuthenRequired = React.lazy(() =>
   import("../../Authen/AuthenRequired/AuthenRequired")
 );
 
-const UpdatePost = React.lazy(() => 
-  import("../../Post/UpdatePost/UpdatePost")
-);
+const UpdatePost = React.lazy(() => import("../../Post/UpdatePost/UpdatePost"));
 
 function HeaderCommon(props) {
   const [token, setToken] = useState(window.localStorage.getItem("token"));
@@ -82,7 +82,7 @@ function HeaderCommon(props) {
           <Suspense fallback={<div>Loading...</div>}>
             <section>
               <Switch>
-                <Route path="/update-post" component={UpdatePost}/>
+                <Route path="/update-post" component={UpdatePost} />
                 <Route path="/home" component={Home} />
                 <Route
                   path="/login"
@@ -101,7 +101,12 @@ function HeaderCommon(props) {
                 />
                 <Route
                   path="/manager-post"
-                  render={(props) => <ManagerPost />}
+                  render={(props) => (
+                    <AuthenRequired
+                      setToken={setToken}
+                      requestedComponent={ManagerPost}
+                    />
+                  )}
                 />
                 <Route path="/:somestring" component={Error} />
               </Switch>

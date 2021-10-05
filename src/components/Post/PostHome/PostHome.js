@@ -25,27 +25,31 @@ function PostHome(props) {
       <Image width={200} src={src} id="image" />
 
       <div className="posthome-information">
-        <div id="posthome-title">{title}</div>
+        <div className="posthome-title">
+          <h1>{title}</h1>
+        </div>
         <div>
-          <HomeFilled id="icon-room" />
+          <HomeFilled className="icon-room" />
           {room_type}
         </div>
         <div>
-          <TeamOutlined id="icon-gender" />
+          <TeamOutlined className="icon-gender" />
           {gender}
-          <AreaChartOutlined id="icon-area" />
+          <AreaChartOutlined className="icon-area" />
           {area}
         </div>
         <div>
-          <ContactsFilled id="icon-room-available" />
+          <ContactsFilled className="icon-room-available" />
           {roomAvailable} phòng trống
         </div>
         <div>
-          <EnvironmentFilled id="icon-location" />
+          <EnvironmentFilled className="icon-location" />
           {location}
         </div>
       </div>
-      <div id="posthome-price">{price}</div>
+      <div className="posthome-price">
+        <b>{price}</b>
+      </div>
     </div>
   );
 }

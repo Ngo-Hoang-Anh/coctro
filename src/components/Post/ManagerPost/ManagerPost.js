@@ -14,7 +14,8 @@ function ManagerPost(props) {
       room_type: "Nhà trọ",
       gender: "Nam & Nữ",
       area: "20m²",
-      location: "Địa chỉ",
+      location:
+        "một cái địa chỉ khá là dài lorem ipsummột cái địa chỉ khá là dài lorem ipsummột cái địa chỉ khá là dài lorem ipsum",
       price: "5 tr/căn",
       roomAvailable: "3",
       src: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
@@ -172,48 +173,40 @@ function ManagerPost(props) {
   const [buttons, setButtons] = useState(pendingButtons);
   //buttons-end
 
-  useEffect(() => updateData(), [statusFilter, roomTypeFilter]);
+  useEffect(() => updateData(), [statusFilter, roomTypeFilter, updateData]);
 
   return (
     <div className="manager-post-container">
-      <div className="manager-post-container-detail">
-        <Breadcrumb className="breadcrumb">
-          <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
-          <Breadcrumb.Item>Quản lý bài đăng</Breadcrumb.Item>
-        </Breadcrumb>
-        <Layout className="manager-post-layout">
-          <Sider className="manager-post-option">
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={["1"]}
-              defaultOpenKeys={["sub1"]}
-              style={{ height: "100%", borderRight: 0 }}
-            >
-              {roomTypeOptions.map((item) => (
-                <Menu.Item
-                  key={item.value}
-                  onClick={() => setRoomTypeFilter(item.value)}
-                >
-                  {item.label}
-                </Menu.Item>
-              ))}
-            </Menu>
-          </Sider>
-          <Sider>
-            <Menu mode="horizontal" className="slide-post-status">
-              {postStatus.map((item) => (
-                <Menu.Item
-                  key={item.value}
-                  onClick={() => setStatusFilter(item.value)}
-                >
-                  {item.label}
-                </Menu.Item>
-              ))}
-            </Menu>
-            {/* Ai lam cai gi thi ghi cai do vao day switch */}
-          </Sider>
-        </Layout>
-        <ListPost buttons={buttons} data={fakeData} />
+      <div className="left-sider">
+        <Sider className="manager-post-option">
+          <Menu style={{ height: "100%", borderRight: 0 }}>
+            {roomTypeOptions.map((item) => (
+              <Menu.Item
+                key={item.value}
+                onClick={() => setRoomTypeFilter(item.value)}
+              >
+                {item.label}
+              </Menu.Item>
+            ))}
+          </Menu>
+        </Sider>
+      </div>
+      <div className="right-container">
+        <Sider>
+          <Menu mode="horizontal" className="slide-post-status">
+            {postStatus.map((item) => (
+              <Menu.Item
+                key={item.value}
+                onClick={() => setStatusFilter(item.value)}
+              >
+                {item.label}
+              </Menu.Item>
+            ))}
+          </Menu>
+        </Sider>
+        <div className="manager-post-container-detail">
+          <ListPost buttons={buttons} data={fakeData} />
+        </div>
       </div>
     </div>
   );

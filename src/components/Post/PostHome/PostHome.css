@@ -1,7 +1,8 @@
 .posthome-contain {
-  width: 100%;
+  width: 1000px;
   background-color: white;
-  max-width: 800px;
+  max-width: 1000px;
+  min-width: 700px;
   border-radius: 16px;
   overflow: hidden;
   -webkit-box-shadow: 0px 2px 64px rgba(0, 0, 0, 0.2);
@@ -21,24 +22,29 @@
   width: 55%;
 }
 
-#image {
+.image {
   margin-left: 20px;
 }
 
-#posthome-title {
+.posthome-title {
   font-size: 25px;
   margin-bottom: 15px;
 }
 
-#posthome-price {
-  font-size: 25px;
+.posthome-price {
+  font-size: 45px;
 }
 
-#icon-room, #icon-gender, #icon-area, #icon-location, #icon-room-available, #icon-price {
+.icon-room,
+.icon-gender,
+.icon-area,
+.icon-location,
+.icon-room-available,
+.icon-price {
   margin-right: 10px;
 }
 
-#icon-area {
+.icon-area {
   margin-left: 50px;
 }
 /*# sourceMappingURL=PostHome.css.map */

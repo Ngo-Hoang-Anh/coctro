@@ -106,7 +106,7 @@ const Login = (props) => {
           <Form.Item>
             <div className="link-to-register">
               <p>
-                Chưa có tài khoản?<a href="/register"> Đăng kí ngay</a>
+                Chưa có tài khoản?<a href="/register"> Đăng ký ngay</a>
               </p>
             </div>
           </Form.Item>
