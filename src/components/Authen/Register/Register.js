@@ -32,13 +32,18 @@ const Register = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container-register">
       <Image
         id="logo"
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
       />
       <div className="container-form-register">
         <Form name="normal_login" className="login-form" onFinish={onFinish}>
+          <Form.Item>
+            <div className="login-label">
+              <span>Đăng ký</span>
+            </div>
+          </Form.Item>
           <Form.Item
             name="email"
             rules={[
