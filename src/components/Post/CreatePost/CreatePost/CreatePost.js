@@ -127,7 +127,7 @@ function Post(props) {
   //Description - End
 
   //Strict Time - Start
-  const [strictTime, setStrictTime] = useState("");
+  const [strictTime, setStrictTime] = useState("Không");
   const [strictTimeStart, setStrictTimeStart] = useState("");
   const [strictTimeEnd, setStrictTimeEnd] = useState("");
 
