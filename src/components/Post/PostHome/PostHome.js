@@ -20,14 +20,24 @@ function PostHome(props) {
     price,
     roomAvailable,
   } = props;
+  let address = "";
+  try {
+    address = location[0] + "," + location[1];
+  } catch (e) {
+    address = "";
+  }
+  let cost = "";
+  try {
+    cost = price[0] + "-" + price[1];
+  } catch (e) {
+    cost = price;
+  }
+
   return (
     <div className="posthome-contain">
       <Image width={200} src={src} id="image" />
-
       <div className="posthome-information">
-        <div className="posthome-title">
-          <h1>{title}</h1>
-        </div>
+        <div className="posthome-title">{<h1>{title}</h1>}</div>
         <div>
           <HomeFilled className="icon-room" />
           {room_type}
@@ -44,12 +54,10 @@ function PostHome(props) {
         </div>
         <div>
           <EnvironmentFilled className="icon-location" />
-          {location}
+          {address}
         </div>
       </div>
-      <div className="posthome-price">
-        <b>{price}</b>
-      </div>
+      <div className="posthome-price">{<b>{cost} tr</b>}</div>
     </div>
   );
 }

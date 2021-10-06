@@ -7,7 +7,10 @@ function CommonInformation(props) {
   return (
     <div className="container-create-post">
       <Form {...props.formItemLayout}>
-        <span id="span-title">Thông tin chung:</span><br/><br/><br/>
+        <span id="span-title">Thông tin chung:</span>
+        <br />
+        <br />
+        <br />
         <Form.Item
           name="postType"
           label="Loại hình"
@@ -97,7 +100,6 @@ function CommonInformation(props) {
           label="Diện tích (đơn vị: m2):"
           rules={[
             {
-              type: "number",
               required: true,
               message: "Hãy nhập diện tích phòng",
             },
@@ -127,7 +129,7 @@ function CommonInformation(props) {
           />
         </Form.Item>
 
-        <br/>
+        <br />
         <div id="button">
           <Button
             type="primary"
@@ -135,7 +137,7 @@ function CommonInformation(props) {
           >
             Tiếp theo
           </Button>
-          </div>
+        </div>
       </Form>
     </div>
   );

@@ -10,26 +10,28 @@ function ListPost(props) {
     <List
       dataSource={data}
       renderItem={(item) => (
-        <List.Item key={item.title}>
-          <Extension
-            id={item.title}
-            buttons={buttons}
-            WrappedComponent={() => {
-              return (
-                <PostHome
-                  src={item.src}
-                  title={item.title}
-                  room_type={item.room_type}
-                  gender={item.gender}
-                  area={item.area}
-                  location={item.location}
-                  price={item.price}
-                  roomAvailable={item.roomAvailable}
-                />
-              );
-            }}
-          />
-        </List.Item>
+        <>
+          <List.Item key={item.post_id}>
+            <Extension
+              id={item.post_id}
+              buttons={buttons}
+              WrappedComponent={() => {
+                return (
+                  <PostHome
+                    src={item.post_gallery[0]}
+                    title={item.post_title}
+                    room_type={item.motel_type}
+                    gender={item.room_gender}
+                    area={item.room_area}
+                    location={item.motel_address}
+                    price={item.room_cost.rental_cost}
+                    roomAvailable={item.room_available}
+                  />
+                );
+              }}
+            />
+          </List.Item>
+        </>
       )}
     />
   );

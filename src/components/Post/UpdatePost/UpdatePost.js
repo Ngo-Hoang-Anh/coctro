@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Form,
   Radio,
@@ -9,12 +9,13 @@ import {
   Checkbox,
   Slider,
 } from "antd";
+import { sendRequest } from "../../../common/utility";
+import { useParams } from "react-router-dom";
 import "./UpdatePost.css";
 const LocationPicker = React.lazy(() =>
   import("../../../components/commons/LocationPicker/LocationPicker")
 );
 const UploadImage = React.lazy(() => import("../CreatePost/UploadImage"));
-
 const { TextArea } = Input;
 
 function UpdatePost(props) {
@@ -119,10 +120,10 @@ function UpdatePost(props) {
   const [chosenUtilities, setChosenUtilities] = useState([]);
   //Utilities - End
   //Phone - Start
-  const [phone, setPhone] = useState();
+  const [phone, setPhone] = useState("");
   //Phone - End
   //Contact-start
-  const [contact, setContact] = useState();
+  const [contact, setContact] = useState("");
   //contact-end
   //Title - Start
   const [title, setTitle] = useState("");
@@ -148,6 +149,62 @@ function UpdatePost(props) {
   //room area -end
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  //onload-start
+  let { id } = useParams();
+  const [form] = Form.useForm();
+  const onload = () => {
+    const path = "/post-manager/" + id;
+    let token = window.localStorage.getItem("token").toString();
+    const myInit = {
+      method: "GET",
+      headers: {
+        Authorization: token,
+      },
+    };
+    sendRequest(path, myInit).then((result) => {
+      if (result.error == null) {
+        form.setFieldsValue({
+          phone: result.contact.contact_numbers[0],
+          postType: result.post_type,
+          roomType: result.motel_type,
+          roomName: result.motel_name,
+          area: result.room_area,
+          strictTime: result.strictTime,
+          strictTimeEnd: result.StrictTimeEnd,
+          strictTimeStart: result.StrictTimeStart,
+          numberRoomAvailable: result.room_available,
+          numberPeoplePerRoom: result.max_slot_per_room,
+          gender: result.room_gender,
+          utilities: result.utilities,
+          deposit: result.room_cost.deposit_cost,
+          internetPrice: result.room_cost.internet_cost,
+          electricPrice: result.room_cost.electricity_cost,
+          rentPrice: result.room_cost.rental_cost,
+          cleanPrice: result.room_cost.clean_cost,
+          waterPrice: result.room_cost.water_cost,
+          detailAddress: result.detailAddress,
+          contact: result.contact.contact_name[0],
+          description: result.extra_info,
+          title: result.post_title,
+        });
+        setChosenLocation([...result.motel_address]);
+        if (result.strictTime === "Có") {
+          setStrictTime(result.strictTime);
+        }
+      } else {
+        window.alert("Error:" + result.error);
+      }
+    });
+  };
+  useEffect(() => {
+    onload();
+  }, []);
+  // //onload-end
+  const onSubmit = () => {
+    console.log(form.getFieldsValue());
+    //send request here
+  };
+
   let unitPrice = "VNĐ/người";
   if (roomType === "Ký túc xá") {
     unitPrice = "(đơn vị:VND/người)";
@@ -162,7 +219,7 @@ function UpdatePost(props) {
   return (
     <div className="container">
       <div className="container-update-post">
-        <Form {...formItemLayout}>
+        <Form form={form} {...formItemLayout} onFinish={() => onSubmit()}>
           <span id="span-title">Thông tin chung:</span>
           <br />
           <br />
@@ -180,8 +237,6 @@ function UpdatePost(props) {
             <Radio.Group
               options={valuePostType}
               onChange={(e) => setPostType(e.target.value)}
-              value={postType}
-              defaultValue={postType}
             />
           </Form.Item>
           <Form.Item
@@ -197,12 +252,10 @@ function UpdatePost(props) {
             <Radio.Group
               options={valueRoomType}
               onChange={(e) => setRoomType(e.target.value)}
-              value={roomType}
-              defaultValue={roomType}
             />
           </Form.Item>
           <Form.Item
-            name="name"
+            name="roomName"
             label="Tên trọ:"
             rules={[
               {
@@ -211,11 +264,7 @@ function UpdatePost(props) {
               },
             ]}
           >
-            <Input
-              value={roomName}
-              defaultValue={roomName}
-              onChange={(e) => setRoomName(e.target.value)}
-            />
+            <Input onChange={(e) => setRoomName(e.target.value)} />
           </Form.Item>
           <Form.Item
             name="numberRoomAvailable"
@@ -229,8 +278,6 @@ function UpdatePost(props) {
           >
             <InputNumber
               min={0}
-              value={numberRoomAvailable}
-              defaultValue={numberRoomAvailable}
               onChange={(value) => setNumberRoomAvailable(value)}
             />
           </Form.Item>
@@ -246,8 +293,6 @@ function UpdatePost(props) {
           >
             <InputNumber
               min={1}
-              value={numberPeoplePerRoom}
-              defaultValue={numberPeoplePerRoom}
               onChange={(value) => setNumberPeoplePerRoom(value)}
             />
           </Form.Item>
@@ -256,17 +301,12 @@ function UpdatePost(props) {
             label="Diện tích (đơn vị: m2):"
             rules={[
               {
-                type: "number",
                 required: true,
                 message: "Hãy nhập diện tích phòng",
               },
             ]}
           >
-            <Input
-              value={area}
-              defaultValue={area}
-              onChange={(e) => setArea(e.target.value)}
-            />
+            <Input onChange={(e) => setArea(e.target.value)} />
           </Form.Item>
           <Form.Item
             name="gender"
@@ -281,8 +321,6 @@ function UpdatePost(props) {
             <Radio.Group
               options={valueGender}
               onChange={(e) => setGender(e.target.value)}
-              value={gender}
-              defaultValue={gender}
             />
           </Form.Item>
 
@@ -292,7 +330,7 @@ function UpdatePost(props) {
           <br />
           <br />
           <br />
-          <Form.Item label={"Giá cho thuê" + unitPrice + ":"}>
+          <Form.Item name="rentPrice" label={"Giá cho thuê" + unitPrice + ":"}>
             <Slider
               step={0.1}
               range
@@ -307,88 +345,67 @@ function UpdatePost(props) {
                 5: "5",
               }}
               tooltipVisible={true}
-              defaultValue={rentPrice}
               onChange={(value) => {
                 setRentPrice(value);
               }}
             />
           </Form.Item>
           <Form.Item name="deposit" label="Giá tiền đặt cọc(Đơn vị: VNĐ)">
-            <Input
-              value={deposit}
-              defaultValue={deposit}
-              onChange={(e) => setDeposit(e.target.value)}
-            />
+            <Input onChange={(e) => setDeposit(e.target.value)} />
           </Form.Item>
-          <Form.Item label="Giá điện (đơn vị nghìn VND/số)">
-            <Input
-              value={electricPrice}
-              defaultValue={electricPrice}
-              onChange={(e) => setElectricPrice(e.target.value)}
-            />
+          <Form.Item
+            name="electricPrice"
+            label="Giá điện (đơn vị nghìn VND/số)"
+          >
+            <Input onChange={(e) => setElectricPrice(e.target.value)} />
           </Form.Item>
-          <Form.Item label="Giá nước">
+          <Form.Item name="waterPrice" label="Giá nước">
             <Input
               placeholder="Vui lòng ghi rõ đơn vị"
-              value={waterPrice}
-              defaultValue={waterPrice}
               onChange={(e) => setWaterPrice(e.target.value)}
             />
           </Form.Item>
-          <Form.Item label="Giá internet/truyền hình cáp">
+          <Form.Item name="internetPrice" label="Giá internet/truyền hình cáp">
             <Input
               placeholder="Vui lòng ghi rõ đơn vị"
-              value={internetPrice}
-              defaultValue={internetPrice}
               onChange={(e) => setInternetPrice(e.target.value)}
             />
           </Form.Item>
-          <Form.Item name="cleanCost" label="Chi phí vệ sinh">
+          <Form.Item name="cleanPrice" label="Chi phí vệ sinh">
             <Input
               placeholder="Vui lòng ghi rõ đơn vị"
-              value={cleanPrice}
-              defaultValue={cleanPrice}
               onChange={(e) => setCleanPrice(e.target.value)}
             />
           </Form.Item>
-          <Form.Item label="Địa chỉ">
+          <LocationPicker
+            chosenLocation={[...chosenLocation]}
+            setChosenLocation={setChosenLocation}
+          />
+          <Form.Item name="address" label="Địa chỉ">
             <LocationPicker
               chosenLocation={[...chosenLocation]}
               setChosenLocation={setChosenLocation}
             />
           </Form.Item>
-          <Form.Item label="Địa chỉ chi tiết">
+          <Form.Item name="detailAddress" label="Địa chỉ chi tiết">
             <Input
               placeholder="(Đường/số nhà)"
-              value={detailAddress}
-              defaultValue={detailAddress}
               onChange={(e) => setDetailAddress(e.target.value)}
             />
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
             <p>{fileList.length} ảnh đã tải lên</p>
-            <Button type="primary" onClick={() => setIsModalVisible(true)}>
-              Tải ảnh lên
-            </Button>
-            <Modal
-              title="Basic Modal"
-              visible={isModalVisible}
-              onOk={() => setIsModalVisible(false)}
-              onCancel={() => setIsModalVisible(false)}
-            >
-              <UploadImage fileList={[...fileList]} setFileList={setFileList} />
-            </Modal>
+            <UploadImage fileList={[...fileList]} setFileList={setFileList} />
             <p>
               *Đăng nhiều hình ảnh sẽ giúp bài đăng hấp dẫn hơn với người tìm
               trọ*
             </p>
           </Form.Item>
-          <Form.Item label="Tiện ích">
+          <Form.Item name="utilities" label="Tiện ích">
             <Checkbox.Group
-              id="checkbox-utilities"
+              className="checkbox-utilities"
               options={utilities}
               onChange={(checkedValue) => setChosenUtilities(checkedValue)}
-              defaultValue={[...chosenUtilities]}
             />
           </Form.Item>
           <span id="span-title">Thông tin bài đăng:</span>
@@ -396,60 +413,35 @@ function UpdatePost(props) {
           <br />
           <br />
           <Form.Item name="contact" label="Người liên hệ">
-            <Input
-              value={contact}
-              defaultValue={contact}
-              onChange={(e) => setContact(e.target.value)}
-            />
+            <Input onChange={(e) => setContact(e.target.value)} />
           </Form.Item>
           <Form.Item name="phone" label="Số điện thoại">
-            <Input
-              value={phone}
-              defaultValue={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
+            <Input onChange={(e) => setPhone(e.target.value)} />
           </Form.Item>
           <Form.Item name="title" label="Tiêu đề bài đăng">
-            <Input
-              value={title}
-              defaultValue={title || roomName}
-              onChange={(e) => setTitle(e.target.value)}
-            />
+            <Input onChange={(e) => setTitle(e.target.value)} />
           </Form.Item>
           <Form.Item name="description" label="Nội dung mô tả">
             <TextArea
               placeholder="Phòng trọ của bạn có điểm gì nổi bật so với các phòng trọ khác?
              Có chi phí nào chưa được đề cập không?"
               rows={4}
-              value={description}
-              defaultValue={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </Form.Item>
-
           <Form.Item name="strictTime" label="Giờ giới nghiêm">
             <Radio.Group
               options={valueStrictTime}
               onChange={(e) => setStrictTime(e.target.value)}
-              value={strictTime}
-              defaultValue={strictTime}
             />
           </Form.Item>
           {strictTime === "Có" && (
             <>
-              <Form.Item name="StrictTimeStart" label="Thời gian bắt đầu">
-                <Input
-                  value={strictTimeStart}
-                  defaultValue={strictTimeStart}
-                  onChange={(e) => setStrictTimeStart(e.target.value)}
-                />
+              <Form.Item name="strictTimeStart" label="Thời gian bắt đầu">
+                <Input onChange={(e) => setStrictTimeStart(e.target.value)} />
               </Form.Item>
-              <Form.Item name="StrictTimeEnd" label="Thời gian kết thúc">
-                <Input
-                  value={strictTimeEnd}
-                  defaultValue={strictTimeEnd}
-                  onChange={(e) => setStrictTimeEnd(e.target.value)}
-                />
+              <Form.Item name="strictTimeEnd" label="Thời gian kết thúc">
+                <Input onChange={(e) => setStrictTimeEnd(e.target.value)} />
               </Form.Item>
             </>
           )}
@@ -470,7 +462,7 @@ function UpdatePost(props) {
           </Form.Item>
           <br />
           <div id="button">
-            <Button type="primary" htmlType="submit">
+            <Button htmlType="submit" type="primary">
               Cập nhật
             </Button>
           </div>

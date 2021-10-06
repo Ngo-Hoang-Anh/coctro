@@ -1,81 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./ManagerPost.css";
 import ListPost from "../ListPost/ListPost";
-
-import { Layout, Menu, Breadcrumb } from "antd";
-
+import { Layout, Menu } from "antd";
+import { sendRequest } from "../../../common/utility";
+import { useHistory } from "react-router-dom";
 const { Sider } = Layout;
 
 function ManagerPost(props) {
-  const fakeData = [
-    {
-      id: 1,
-      title: "Nhà trọ Xanh Lá",
-      room_type: "Nhà trọ",
-      gender: "Nam & Nữ",
-      area: "20m²",
-      location:
-        "một cái địa chỉ khá là dài lorem ipsummột cái địa chỉ khá là dài lorem ipsummột cái địa chỉ khá là dài lorem ipsum",
-      price: "5 tr/căn",
-      roomAvailable: "3",
-      src: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      id: 2,
-      title: "Trọ Tâm Lê",
-      room_type: "Nhà trọ",
-      gender: "Nam & Nữ",
-      area: "20m²",
-      location: "Địa chỉ",
-      price: "5 tr/căn",
-      roomAvailable: "3",
-      src: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      id: 3,
-      title: "Trọ chị Hạnh",
-      room_type: "Nhà trọ",
-      gender: "Nam & Nữ",
-      area: "20m²",
-      location: "Địa chỉ",
-      price: "5 tr/căn",
-      roomAvailable: "3",
-      src: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      id: 4,
-      title: "Trọ Tuấn Cường",
-      room_type: "Nhà trọ",
-      gender: "Nam & Nữ",
-      area: "20m²",
-      location: "Địa chỉ",
-      price: "5 tr/căn",
-      roomAvailable: "3",
-      src: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      id: 5,
-      title: "Chung cư mini 68",
-      room_type: "Nhà trọ",
-      gender: "Nam & Nữ",
-      area: "20m²",
-      location: "Địa chỉ",
-      price: "5 tr/căn",
-      roomAvailable: "3",
-      src: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      id: 6,
-      title: "Nhà trọ Thu Thuỷ",
-      room_type: "Nhà trọ",
-      gender: "Nam & Nữ",
-      area: "20m²",
-      location: "Địa chỉ",
-      price: "5 tr/căn",
-      roomAvailable: "3",
-      src: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-  ];
+  let history = useHistory();
   const roomTypeOptions = [
     { value: "all", label: "Tất cả" },
     { value: "rentalRoom", label: "Phòng cho thuê" },
@@ -96,7 +28,6 @@ function ManagerPost(props) {
   const [data, setData] = useState([]);
   //data -end
   const updateData = () => {
-    console.log(roomTypeFilter, statusFilter);
     if (statusFilter === "pending") {
       setButtons(pendingButtons);
     } else if (statusFilter === "approved") {
@@ -107,10 +38,28 @@ function ManagerPost(props) {
       setButtons(expiredButtons);
     }
     //update data here
+    const path = "/post-manager";
+    let token = window.localStorage.getItem("token").toString();
+    const myInit = {
+      method: "GET",
+      headers: {
+        Authorization: token,
+      },
+    };
+    sendRequest(path, myInit).then((result) => {
+      if (result.error == null) {
+        setData([...result]);
+      } else {
+        window.alert("Error:" + result.error);
+      }
+    });
   };
   //butons-start
   const Delete = (id) => {
-    console.log(id);
+    console.log("delete" + id);
+  };
+  const UpdatePost = (id) => {
+    history.push("/update-post/" + id);
   };
   const pendingButtons = [
     {
@@ -120,7 +69,7 @@ function ManagerPost(props) {
     },
     {
       label: "Chỉnh sửa",
-      onClick: Delete,
+      onClick: UpdatePost,
       color: "blue",
     },
   ];
@@ -132,7 +81,7 @@ function ManagerPost(props) {
     },
     {
       label: "Chỉnh sửa",
-      onClick: Delete,
+      onClick: UpdatePost,
       color: "blue",
     },
     {
@@ -149,7 +98,7 @@ function ManagerPost(props) {
     },
     {
       label: "Chỉnh sửa",
-      onClick: Delete,
+      onClick: UpdatePost,
       color: "blue",
     },
   ];
@@ -161,7 +110,7 @@ function ManagerPost(props) {
     },
     {
       label: "Chỉnh sửa",
-      onClick: Delete,
+      onClick: UpdatePost,
       color: "blue",
     },
     {
@@ -173,7 +122,9 @@ function ManagerPost(props) {
   const [buttons, setButtons] = useState(pendingButtons);
   //buttons-end
 
-  useEffect(() => updateData(), [statusFilter, roomTypeFilter, updateData]);
+  useEffect(() => {
+    updateData();
+  }, [statusFilter, roomTypeFilter]);
 
   return (
     <div className="manager-post-container">
@@ -205,7 +156,7 @@ function ManagerPost(props) {
           </Menu>
         </Sider>
         <div className="manager-post-container-detail">
-          <ListPost buttons={buttons} data={fakeData} />
+          <ListPost buttons={buttons} data={data} />
         </div>
       </div>
     </div>

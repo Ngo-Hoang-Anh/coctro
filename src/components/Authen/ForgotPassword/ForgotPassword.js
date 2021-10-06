@@ -125,19 +125,19 @@ function ForgotPassword(props) {
               ]}
             >
               <div className="email">
-              <Input placeholder="OTP" />
+                <Input placeholder="OTP" />
               </div>
               Đề xuất gửi OTP sau 60s
             </Form.Item>
             <Form.Item>
-            <div className="forgot-button">
-              <Button
-                type="primary"
-                onClick={() => setOption("inputNewPassword")}
-                className="login-form-button"
-              >
-                Xác nhận OTP
-              </Button>
+              <div className="forgot-button">
+                <Button
+                  type="primary"
+                  onClick={() => setOption("inputNewPassword")}
+                  className="login-form-button"
+                >
+                  Xác nhận OTP
+                </Button>
               </div>
             </Form.Item>
           </Form>
@@ -149,11 +149,11 @@ function ForgotPassword(props) {
       return (
         <div className="container-forgot-password">
           <Form.Item>
-              <div className="new-password-title">
-                <ArrowLeftOutlined id="back-icon" />{" "}
-                <span id="new-password-title-content">Nhập mật khẩu mới</span>
-              </div>
-            </Form.Item>
+            <div className="new-password-title">
+              <ArrowLeftOutlined id="back-icon" />{" "}
+              <span id="new-password-title-content">Nhập mật khẩu mới</span>
+            </div>
+          </Form.Item>
           <Form name="confirmOTP" className="login-form" onFinish={confirmOTP}>
             <Form.Item
               name="password"
@@ -192,14 +192,14 @@ function ForgotPassword(props) {
               <Input.Password placeholder="Xác nhận mật khẩu" />
             </Form.Item>
             <Form.Item>
-            <div className="forgot-button">
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="login-form-button"
-              >
-                Xác nhận
-              </Button>
+              <div className="forgot-button">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button"
+                >
+                  Xác nhận
+                </Button>
               </div>
             </Form.Item>
             {/* <Button
