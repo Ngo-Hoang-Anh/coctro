@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { Form, Input, Button, Image } from "antd";
+import { Form, Input, Button, Image, Tooltip } from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -35,6 +35,28 @@ const Register = () => {
     });
   };
 
+  const [message, setMessage] = useState("Hãy nhập mật khẩu!");
+
+  const checkPassword = (value) => {
+    if(value.length == 0) {
+      setMessage("Hãy nhập mật khẩu!");
+    } else {
+      if(value.length < 6) {
+        setMessage("Mật khẩu phải chứa ít nhất 6 ký tự");
+        return;
+      } else {
+        if(!/^(?=.*[A-Z])/.test(value)) {
+          setMessage("Hãy nhập ít nhất một chữ cái in hoa");
+        } else {
+          if(!/^(?=.*[1-9])/.test(value)) {
+            setMessage("Hãy nhập ít nhất một chữ số");
+          }
+        }
+      }
+    }
+//"Hãy nhập ít nhất một chữ cái in hoa"
+    // if(value)
+  }
   return (
     <div className="container-register">
       <Image
@@ -72,6 +94,10 @@ const Register = () => {
                 required: true,
                 message: "Hãy nhập họ và tên!",
               },
+              {
+                pattern: new RegExp(/[A-Za-z]/),
+                message: "Họ tên chỉ được chứa chữ cái",
+              },
             ]}
           >
             <div className="fullname">
@@ -86,16 +112,21 @@ const Register = () => {
             rules={[
               {
                 required: true,
-                message: "Hãy nhập mật khẩu!",
+                min: 6,
+                pattern: new RegExp(/^(?=.*[A-Z][1-9])/),
+                message: {message},
               },
             ]}
             hasFeedback
           >
             <div className="password">
-              <Input.Password
-                prefix={<LockOutlined className="site-form-item-icon" />}
-                placeholder="Mật khẩu"
-              />
+              <Tooltip placement="right" title="Hãy nhập mật khẩu!">
+                <Input.Password
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  placeholder="Mật khẩu"
+                  onChange={event => checkPassword(event.target.value)}
+                />
+              </Tooltip>
             </div>
           </Form.Item>
 
@@ -115,7 +146,7 @@ const Register = () => {
                   }
 
                   return Promise.reject(
-                    new Error("Hai mật khẩu bạn vừa nhập không khớp")
+                    new Error("Hai mật khẩu không khớp")
                   );
                 },
               }),
@@ -133,6 +164,7 @@ const Register = () => {
               <Button
                 type="primary"
                 htmlType="submit"
+                // onSubmit={checkPassword}
                 className="login-form-button"
               >
                 Đăng ký
