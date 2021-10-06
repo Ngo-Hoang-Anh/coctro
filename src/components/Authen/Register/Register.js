@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { Form, Input, Button, Image } from "antd";
+import { Form, Input, Button, Image, Tooltip } from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -35,6 +35,51 @@ const Register = () => {
     });
   };
 
+  const [message, setMessage] = useState("Hãy nhập mật khẩu!");
+
+  const checkPassword = (value) => {
+    if (!value) {
+      setMessage("Hãy nhập mật khẩu!");
+    } else {
+      if (value.length < 6) {
+        setMessage("Mật khẩu phải chứa ít nhất 6 ký tự");
+      } else {
+        if (value.length > 30) {
+          setMessage("Mật khẩu phải không dài hơn 30 ký tự");
+        } else {
+          if (!/^(?=.*[A-Z])/.test(value)) {
+            setMessage("Hãy nhập ít nhất một chữ cái in hoa");
+          } else {
+            if (!/^(?=.*[a-z])/.test(value)) {
+              setMessage("Hãy nhập ít nhất một chữ cái in thường");
+            } else {
+              if (!/^(?=.*[1-9])/.test(value)) {
+                setMessage("Hãy nhập ít nhất một chữ số");
+              } else {
+                if (!/[!@#$&*]/.test(value)) {
+                  setMessage("Hãy nhập ít nhất một ký tự đặc biệt");
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    //"Hãy nhập ít nhất một chữ cái in hoa"
+    // if(value)
+  };
+
+  const [fullName, setFullName] = useState("Hãy nhập họ và tên");
+  const checkFullName = (value) => {
+    if (!value || value === "") {
+      setFullName("Hãy nhập họ và tên");
+    } else {
+      if(/^[1-9]+$/.test(value)) {
+        setFullName("Họ và tên không được chứa số");
+      }
+    }
+  };
   return (
     <div className="container-register">
       <Image
@@ -42,7 +87,24 @@ const Register = () => {
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
       />
       <div className="container-form-register">
-        <Form name="normal_login" className="login-form" onFinish={onFinish}>
+        <div className="register-rule">
+          <span>
+            Ghi chú:
+            <br />
+            - Email phải chứa cả đuôi (ví dụ: @gmail.com, @fpt.edu.vn,...){" "}
+            <br />
+            - Họ và tên không được chứa số
+            <br />
+            - Mật khẩu có độ dài từ 6 đến 30 ký tự
+            <br />
+            - Mật khẩu phải chứa ít nhất 1 ký tự in hoa (ví dụ: A, B, C,...){" "}
+            <br />
+            - Mật khẩu phải chứa ít nhất 1 ký tự in thường (ví dụ: a, b, c,...){" "}
+            <br />
+            - Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt (ví dụ: @, !,...)
+          </span>
+        </div>
+        <Form name="normal_login" className="register-form" onFinish={onFinish}>
           <Form.Item>
             <div className="login-label">
               <span>Đăng ký</span>
@@ -70,14 +132,18 @@ const Register = () => {
             rules={[
               {
                 required: true,
-                message: "Hãy nhập họ và tên!",
-              },
+                pattern: new RegExp(/^[A-Za-z\u00C0-\u024F\u1E00-\u1EFF ]+$/),
+                message: "Hãy nhập đúng tên của bạn",
+              },//{ fullName }
             ]}
+            hasFeedback
           >
             <div className="fullname">
               <Input
                 prefix={<UserOutlined className="site-form-item-icon" />}
                 placeholder="Họ và Tên"
+                onChange={(event) => checkFullName(event.target.value)}
+                
               />
             </div>
           </Form.Item>
@@ -86,7 +152,11 @@ const Register = () => {
             rules={[
               {
                 required: true,
-                message: "Hãy nhập mật khẩu!",
+                pattern: new RegExp(
+                  // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,30}$/
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&\u00C0-\u024F\u1E00-\u1EFF ]{6,30}$/
+                ),
+                message: { message },
               },
             ]}
             hasFeedback
@@ -95,6 +165,7 @@ const Register = () => {
               <Input.Password
                 prefix={<LockOutlined className="site-form-item-icon" />}
                 placeholder="Mật khẩu"
+                onChange={(event) => checkPassword(event.target.value)}
               />
             </div>
           </Form.Item>
@@ -114,9 +185,7 @@ const Register = () => {
                     return Promise.resolve();
                   }
 
-                  return Promise.reject(
-                    new Error("Hai mật khẩu bạn vừa nhập không khớp")
-                  );
+                  return Promise.reject(new Error("Hai mật khẩu không khớp"));
                 },
               }),
             ]}
@@ -133,6 +202,7 @@ const Register = () => {
               <Button
                 type="primary"
                 htmlType="submit"
+                // onSubmit={checkPassword}
                 className="login-form-button"
               >
                 Đăng ký
