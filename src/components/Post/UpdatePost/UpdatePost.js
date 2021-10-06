@@ -334,7 +334,7 @@ function UpdatePost(props) {
             <Slider
               step={0.1}
               range
-              min={0}
+              min={0.1}
               max={5}
               marks={{
                 0: "0",
@@ -377,10 +377,6 @@ function UpdatePost(props) {
               onChange={(e) => setCleanPrice(e.target.value)}
             />
           </Form.Item>
-          <LocationPicker
-            chosenLocation={[...chosenLocation]}
-            setChosenLocation={setChosenLocation}
-          />
           <Form.Item name="address" label="Địa chỉ">
             <LocationPicker
               chosenLocation={[...chosenLocation]}

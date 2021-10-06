@@ -130,7 +130,10 @@ function ManagerPost(props) {
     <div className="manager-post-container">
       <div className="left-sider">
         <Sider className="manager-post-option">
-          <Menu style={{ height: "100%", borderRight: 0 }}>
+          <Menu
+            style={{ height: "100%", borderRight: 0 }}
+            defaultSelectedKeys={roomTypeOptions[0].value}
+          >
             {roomTypeOptions.map((item) => (
               <Menu.Item
                 key={item.value}
@@ -144,7 +147,11 @@ function ManagerPost(props) {
       </div>
       <div className="right-container">
         <Sider>
-          <Menu mode="horizontal" className="slide-post-status">
+          <Menu
+            mode="horizontal"
+            className="slide-post-status"
+            defaultSelectedKeys={postStatus[0].value}
+          >
             {postStatus.map((item) => (
               <Menu.Item
                 key={item.value}

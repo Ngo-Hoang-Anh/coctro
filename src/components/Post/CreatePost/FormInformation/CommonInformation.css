@@ -19,4 +19,8 @@
 #button #button-back {
   margin-right: 200px;
 }
+
+.checkbox-utilities .ant-checkbox-group-item {
+  width: 150px;
+}
 /*# sourceMappingURL=CommonInformation.css.map */

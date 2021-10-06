@@ -20,6 +20,10 @@
   margin-right: 200px;
 }
 
+.checkbox-utilities .ant-checkbox-group-item {
+  width: 150px;
+}
+
 .container {
   background: #fe762c;
 }

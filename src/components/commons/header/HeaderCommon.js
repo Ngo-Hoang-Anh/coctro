@@ -82,7 +82,13 @@ function HeaderCommon(props) {
                 <Route path="/home" component={Home} />
                 <Route
                   path="/login"
-                  render={(props) => <Login setToken={setToken} />}
+                  render={(props) => {
+                    if (token) {
+                      return <Home />;
+                    } else {
+                      return <Login setToken={setToken} />;
+                    }
+                  }}
                 />
                 <Route path="/register" render={(props) => <Register />} />
                 <Route path="/forgot" render={(props) => <ForgotPassword />} />

@@ -30,7 +30,7 @@ function DetailInformation(props) {
           <Slider
             step={0.1}
             range
-            min={0}
+            min={0.1}
             max={5}
             marks={{
               0: "0",
@@ -46,7 +46,6 @@ function DetailInformation(props) {
               props.setRentPrice(value);
             }}
           />
-          {/* <Input value={props.rentPrice} defaultValue={props.rentPrice} onChange={(e) => props.setRentPrice(e.target.value)} /> */}
         </Form.Item>
         <Form.Item name="deposit" label="Giá tiền đặt cọc(đơn vị:VNĐ)">
           <Input
@@ -111,6 +110,7 @@ function DetailInformation(props) {
         </Form.Item>
         <Form.Item label="Tiện ích">
           <Checkbox.Group
+            className="checkbox-utilities"
             id="checkbox-utilities"
             options={props.utilities}
             onChange={(checkedValue) => props.setChosenUtilities(checkedValue)}
