@@ -18,7 +18,7 @@
 
 .container-register .container-form-register {
   width: 100%;
-  max-width: 800px;
+  max-width: 400px;
   background-color: #fff;
   border-radius: 16px;
   overflow: hidden;
@@ -34,7 +34,12 @@
   margin-right: 200px;
 }
 
-.container-register .email-register, .container-register .fullname, .container-register .phone, .container-register .password, .container-register .confirm-password, .container-register .button-register {
+.container-register .email-register,
+.container-register .fullname,
+.container-register .phone,
+.container-register .password,
+.container-register .confirm-password,
+.container-register .button-register {
   width: 300px;
   text-align: center;
   font-size: 18px;
@@ -54,12 +59,5 @@
 
 .container-register .email-register {
   text-align: center;
-}
-
-.register-rule {
-  width: 400px;
-  padding-left: 20px;
-  border-right: 1px dashed green;
-  text-align: left;
 }
 /*# sourceMappingURL=Register.css.map */

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Form, Input, Button, Image, Tooltip } from "antd";
+import { Form, Input, Button, Image, Modal } from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -13,6 +13,8 @@ import { useHistory } from "react-router-dom";
 import "./Register.css";
 
 const Register = () => {
+  const [ok, setOk] = useState(false);
+  const [notifyMessage, setNotifyMessage] = useState("");
   let history = useHistory();
   const onFinish = (values) => {
     //TODO: validate
@@ -27,10 +29,10 @@ const Register = () => {
     };
     sendRequest(path, myInit).then((result) => {
       if (result.error == null) {
-        window.alert("New account created successfully");
-        history.push("/login");
+        setOk(true);
+        setNotifyMessage("New account created successfully");
       } else {
-        window.alert("Error:" + result.error);
+        setNotifyMessage("Error:" + result.error);
       }
     });
   };
@@ -46,28 +48,9 @@ const Register = () => {
       } else {
         if (value.length > 30) {
           setMessage("Mật khẩu phải không dài hơn 30 ký tự");
-        } else {
-          if (!/^(?=.*[A-Z])/.test(value)) {
-            setMessage("Hãy nhập ít nhất một chữ cái in hoa");
-          } else {
-            if (!/^(?=.*[a-z])/.test(value)) {
-              setMessage("Hãy nhập ít nhất một chữ cái in thường");
-            } else {
-              if (!/^(?=.*[1-9])/.test(value)) {
-                setMessage("Hãy nhập ít nhất một chữ số");
-              } else {
-                if (!/[!@#$&*]/.test(value)) {
-                  setMessage("Hãy nhập ít nhất một ký tự đặc biệt");
-                }
-              }
-            }
-          }
         }
       }
     }
-
-    //"Hãy nhập ít nhất một chữ cái in hoa"
-    // if(value)
   };
 
   const [fullName, setFullName] = useState("Hãy nhập họ và tên");
@@ -75,7 +58,7 @@ const Register = () => {
     if (!value || value === "") {
       setFullName("Hãy nhập họ và tên");
     } else {
-      if(/^[1-9]+$/.test(value)) {
+      if (/^[1-9]+$/.test(value)) {
         setFullName("Họ và tên không được chứa số");
       }
     }
@@ -87,23 +70,6 @@ const Register = () => {
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
       />
       <div className="container-form-register">
-        <div className="register-rule">
-          <span>
-            Ghi chú:
-            <br />
-            - Email phải chứa cả đuôi (ví dụ: @gmail.com, @fpt.edu.vn,...){" "}
-            <br />
-            - Họ và tên không được chứa số
-            <br />
-            - Mật khẩu có độ dài từ 6 đến 30 ký tự
-            <br />
-            - Mật khẩu phải chứa ít nhất 1 ký tự in hoa (ví dụ: A, B, C,...){" "}
-            <br />
-            - Mật khẩu phải chứa ít nhất 1 ký tự in thường (ví dụ: a, b, c,...){" "}
-            <br />
-            - Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt (ví dụ: @, !,...)
-          </span>
-        </div>
         <Form name="normal_login" className="register-form" onFinish={onFinish}>
           <Form.Item>
             <div className="login-label">
@@ -134,7 +100,7 @@ const Register = () => {
                 required: true,
                 pattern: new RegExp(/^[A-Za-z\u00C0-\u024F\u1E00-\u1EFF ]+$/),
                 message: "Hãy nhập đúng tên của bạn",
-              },//{ fullName }
+              }, //{ fullName }
             ]}
             hasFeedback
           >
@@ -143,7 +109,6 @@ const Register = () => {
                 prefix={<UserOutlined className="site-form-item-icon" />}
                 placeholder="Họ và Tên"
                 onChange={(event) => checkFullName(event.target.value)}
-                
               />
             </div>
           </Form.Item>
@@ -152,10 +117,7 @@ const Register = () => {
             rules={[
               {
                 required: true,
-                pattern: new RegExp(
-                  // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,30}$/
-                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&\u00C0-\u024F\u1E00-\u1EFF ]{6,30}$/
-                ),
+                pattern: /[0-9A-Za-z]{6,30}$/,
                 message: { message },
               },
             ]}
@@ -169,7 +131,6 @@ const Register = () => {
               />
             </div>
           </Form.Item>
-
           <Form.Item
             name="confirm"
             dependencies={["password"]}
@@ -218,6 +179,25 @@ const Register = () => {
           </Form.Item>
         </Form>
       </div>
+      <Modal
+        visible={notifyMessage !== ""}
+        title={notifyMessage}
+        footer={[
+          <Button
+            type="default"
+            onClick={() => {
+              setNotifyMessage("");
+              if (ok) {
+                history.push("/login");
+              }
+            }}
+          >
+            Close
+          </Button>,
+        ]}
+      >
+        <h1>{notifyMessage}</h1>
+      </Modal>
     </div>
   );
 };

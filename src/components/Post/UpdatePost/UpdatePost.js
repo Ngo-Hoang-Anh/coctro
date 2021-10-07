@@ -5,9 +5,9 @@ import {
   InputNumber,
   Button,
   Input,
-  Modal,
   Checkbox,
   Slider,
+  Modal,
 } from "antd";
 import { sendRequest } from "../../../common/utility";
 import { useParams } from "react-router-dom";
@@ -19,6 +19,7 @@ const UploadImage = React.lazy(() => import("../CreatePost/UploadImage"));
 const { TextArea } = Input;
 
 function UpdatePost(props) {
+  const [notifyMessage, setNotifyMessage] = useState("");
   const formItemLayout = {
     labelCol: {
       xs: {
@@ -49,12 +50,9 @@ function UpdatePost(props) {
       },
     },
   };
-
-  //Post Type - Start
-  const [postType, setPostType] = useState("");
+  //Post Type
   const valuePostType = ["Tìm ở ghép", "Cho thuê trọ"];
-  //Post Type - End
-  //Room Type - Start
+  //Room Type
   const [roomType, setRoomType] = useState("");
   const valueRoomType = [
     "Ký túc xá",
@@ -62,43 +60,11 @@ function UpdatePost(props) {
     "Nhà nguyên căn",
     "Chung cư mini",
   ];
-  //Room Type - End
-  //Number Room Name - Start
-  const [roomName, setRoomName] = useState("");
-  //Number Room Name - End
-  //Number Room Available - Start
-  const [numberRoomAvailable, setNumberRoomAvailable] = useState(3);
-  //Number Room Available - End
-  //Number Person Per Room - Start
-  const [numberPeoplePerRoom, setNumberPeoplePerRoom] = useState(2);
-  //Number Person Per Room - End
-  //Gender - Start
-  const [gender, setGender] = useState("");
+  //Gender
   const valueGender = ["Tất cả", "Nam", "Nữ"];
-  //Gender - End
-  //Address -Start
-  //Rent Price - Start
-  const [rentPrice, setRentPrice] = useState([0.5, 2]);
-  //Rent Price - End
-  //Deposit - Start
-  const [deposit, setDeposit] = useState("");
-  //Deposit - End
-  //Electric Price - Start
-  const [electricPrice, setElectricPrice] = useState("");
-  //Electric Price - End
-  //Water Price - Start
-  const [waterPrice, setWaterPrice] = useState("");
-  //Water Price - End
-  //Internet Price - Start
-  const [internetPrice, setInternetPrice] = useState("");
-  //Internet Price - End
-  //clean Price - Start
-  const [cleanPrice, setCleanPrice] = useState("");
-  //clean Price - End
+  //address
   const [chosenLocation, setChosenLocation] = useState([]);
-  const [detailAddress, setDetailAddress] = useState("");
-  //Address-end
-  //Utilities - Start
+  //utilities
   const utilities = [
     { label: "WC riêng", value: "WC riêng" },
     { label: "Cửa sổ", value: "Cửa sổ" },
@@ -117,39 +83,12 @@ function UpdatePost(props) {
     { label: "Tivi", value: "Tivi" },
     { label: "Ban công", value: "Ban công" },
   ];
-  const [chosenUtilities, setChosenUtilities] = useState([]);
-  //Utilities - End
-  //Phone - Start
-  const [phone, setPhone] = useState("");
-  //Phone - End
-  //Contact-start
-  const [contact, setContact] = useState("");
-  //contact-end
-  //Title - Start
-  const [title, setTitle] = useState("");
-  //Title - End
-
-  //Description - Start
-  const [description, setDescription] = useState("");
-  //Description - End
-
-  //Strict Time - Start
+  //Strict Time
   const [strictTime, setStrictTime] = useState("Không");
-  const [strictTimeStart, setStrictTimeStart] = useState("");
-  const [strictTimeEnd, setStrictTimeEnd] = useState("");
-
   const valueStrictTime = ["Có", "Không"];
-  //Strict Time - End
-
-  //image -start
+  //image
   const [fileList, setFileList] = useState([]);
-  //image -end
-  //room area - start
-  const [area, setArea] = useState(0);
-  //room area -end
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  //onload-start
+  //onload
   let { id } = useParams();
   const [form] = Form.useForm();
   const onload = () => {
@@ -169,9 +108,9 @@ function UpdatePost(props) {
           roomType: result.motel_type,
           roomName: result.motel_name,
           area: result.room_area,
-          strictTime: result.strictTime,
-          strictTimeEnd: result.StrictTimeEnd,
-          strictTimeStart: result.StrictTimeStart,
+          strictTime: result.strict_time,
+          strictTimeEnd: result.strict_time_end,
+          strictTimeStart: result.strict_time_start,
           numberRoomAvailable: result.room_available,
           numberPeoplePerRoom: result.max_slot_per_room,
           gender: result.room_gender,
@@ -182,17 +121,20 @@ function UpdatePost(props) {
           rentPrice: result.room_cost.rental_cost,
           cleanPrice: result.room_cost.clean_cost,
           waterPrice: result.room_cost.water_cost,
-          detailAddress: result.detailAddress,
+          detailAddress: result.detail_address,
           contact: result.contact.contact_name[0],
           description: result.extra_info,
           title: result.post_title,
+          address: result.motel_address,
         });
+        setFileList([...result.post_gallery]);
         setChosenLocation([...result.motel_address]);
+        setRoomType(result.motel_type);
         if (result.strictTime === "Có") {
-          setStrictTime(result.strictTime);
+          setStrictTime(result.strict_time);
         }
       } else {
-        window.alert("Error:" + result.error);
+        setNotifyMessage("Error:" + result.error);
       }
     });
   };
@@ -202,6 +144,8 @@ function UpdatePost(props) {
   // //onload-end
   const onSubmit = () => {
     console.log(form.getFieldsValue());
+    console.log(chosenLocation);
+    console.log(fileList);
     //send request here
   };
 
@@ -234,10 +178,7 @@ function UpdatePost(props) {
               },
             ]}
           >
-            <Radio.Group
-              options={valuePostType}
-              onChange={(e) => setPostType(e.target.value)}
-            />
+            <Radio.Group options={valuePostType} />
           </Form.Item>
           <Form.Item
             name="roomType"
@@ -264,7 +205,7 @@ function UpdatePost(props) {
               },
             ]}
           >
-            <Input onChange={(e) => setRoomName(e.target.value)} />
+            <Input />
           </Form.Item>
           <Form.Item
             name="numberRoomAvailable"
@@ -276,10 +217,7 @@ function UpdatePost(props) {
               },
             ]}
           >
-            <InputNumber
-              min={0}
-              onChange={(value) => setNumberRoomAvailable(value)}
-            />
+            <InputNumber min={0} />
           </Form.Item>
           <Form.Item
             name="numberPeoplePerRoom"
@@ -291,10 +229,7 @@ function UpdatePost(props) {
               },
             ]}
           >
-            <InputNumber
-              min={1}
-              onChange={(value) => setNumberPeoplePerRoom(value)}
-            />
+            <InputNumber min={1} />
           </Form.Item>
           <Form.Item
             name="area"
@@ -306,7 +241,7 @@ function UpdatePost(props) {
               },
             ]}
           >
-            <Input onChange={(e) => setArea(e.target.value)} />
+            <Input />
           </Form.Item>
           <Form.Item
             name="gender"
@@ -318,10 +253,7 @@ function UpdatePost(props) {
               },
             ]}
           >
-            <Radio.Group
-              options={valueGender}
-              onChange={(e) => setGender(e.target.value)}
-            />
+            <Radio.Group options={valueGender} />
           </Form.Item>
 
           <br />
@@ -345,38 +277,30 @@ function UpdatePost(props) {
                 5: "5",
               }}
               tooltipVisible={true}
-              onChange={(value) => {
-                setRentPrice(value);
-              }}
             />
           </Form.Item>
           <Form.Item name="deposit" label="Giá tiền đặt cọc(Đơn vị: VNĐ)">
-            <Input onChange={(e) => setDeposit(e.target.value)} />
+            <Input />
           </Form.Item>
           <Form.Item
             name="electricPrice"
             label="Giá điện (đơn vị nghìn VND/số)"
           >
-            <Input onChange={(e) => setElectricPrice(e.target.value)} />
+            <Input />
           </Form.Item>
           <Form.Item name="waterPrice" label="Giá nước">
-            <Input
-              placeholder="Vui lòng ghi rõ đơn vị"
-              onChange={(e) => setWaterPrice(e.target.value)}
-            />
+            <Input placeholder="Vui lòng ghi rõ đơn vị" />
           </Form.Item>
           <Form.Item name="internetPrice" label="Giá internet/truyền hình cáp">
-            <Input
-              placeholder="Vui lòng ghi rõ đơn vị"
-              onChange={(e) => setInternetPrice(e.target.value)}
-            />
+            <Input placeholder="Vui lòng ghi rõ đơn vị" />
           </Form.Item>
           <Form.Item name="cleanPrice" label="Chi phí vệ sinh">
-            <Input
-              placeholder="Vui lòng ghi rõ đơn vị"
-              onChange={(e) => setCleanPrice(e.target.value)}
-            />
+            <Input placeholder="Vui lòng ghi rõ đơn vị" />
           </Form.Item>
+          {/* <LocationPicker
+            chosenLocation={[...chosenLocation]}
+            setChosenLocation={setChosenLocation}
+          /> */}
           <Form.Item name="address" label="Địa chỉ">
             <LocationPicker
               chosenLocation={[...chosenLocation]}
@@ -384,10 +308,7 @@ function UpdatePost(props) {
             />
           </Form.Item>
           <Form.Item name="detailAddress" label="Địa chỉ chi tiết">
-            <Input
-              placeholder="(Đường/số nhà)"
-              onChange={(e) => setDetailAddress(e.target.value)}
-            />
+            <Input placeholder="(Đường/số nhà)" />
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
             <p>{fileList.length} ảnh đã tải lên</p>
@@ -401,7 +322,6 @@ function UpdatePost(props) {
             <Checkbox.Group
               className="checkbox-utilities"
               options={utilities}
-              onChange={(checkedValue) => setChosenUtilities(checkedValue)}
             />
           </Form.Item>
           <span id="span-title">Thông tin bài đăng:</span>
@@ -409,35 +329,31 @@ function UpdatePost(props) {
           <br />
           <br />
           <Form.Item name="contact" label="Người liên hệ">
-            <Input onChange={(e) => setContact(e.target.value)} />
+            <Input />
           </Form.Item>
           <Form.Item name="phone" label="Số điện thoại">
-            <Input onChange={(e) => setPhone(e.target.value)} />
+            <Input />
           </Form.Item>
           <Form.Item name="title" label="Tiêu đề bài đăng">
-            <Input onChange={(e) => setTitle(e.target.value)} />
+            <Input />
           </Form.Item>
           <Form.Item name="description" label="Nội dung mô tả">
             <TextArea
               placeholder="Phòng trọ của bạn có điểm gì nổi bật so với các phòng trọ khác?
              Có chi phí nào chưa được đề cập không?"
               rows={4}
-              onChange={(e) => setDescription(e.target.value)}
             />
           </Form.Item>
           <Form.Item name="strictTime" label="Giờ giới nghiêm">
-            <Radio.Group
-              options={valueStrictTime}
-              onChange={(e) => setStrictTime(e.target.value)}
-            />
+            <Radio.Group options={valueStrictTime} />
           </Form.Item>
           {strictTime === "Có" && (
             <>
               <Form.Item name="strictTimeStart" label="Thời gian bắt đầu">
-                <Input onChange={(e) => setStrictTimeStart(e.target.value)} />
+                <Input />
               </Form.Item>
               <Form.Item name="strictTimeEnd" label="Thời gian kết thúc">
-                <Input onChange={(e) => setStrictTimeEnd(e.target.value)} />
+                <Input />
               </Form.Item>
             </>
           )}
@@ -464,6 +380,17 @@ function UpdatePost(props) {
           </div>
         </Form>
       </div>
+      <Modal
+        visible={notifyMessage !== ""}
+        title={notifyMessage}
+        footer={[
+          <Button type="default" onClick={() => setNotifyMessage("")}>
+            Close
+          </Button>,
+        ]}
+      >
+        <h1>{notifyMessage}</h1>
+      </Modal>
     </div>
   );
 }

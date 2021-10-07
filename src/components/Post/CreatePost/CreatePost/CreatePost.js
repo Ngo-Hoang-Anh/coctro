@@ -42,12 +42,13 @@ function Post(props) {
       },
     },
   };
+
   //Post Type - Start
-  const [postType, setPostType] = useState("");
-  const valuePostType = ["Tìm ở ghép", "Cho thuê trọ"];
+  const [postType, setPostType] = useState("Cho thuê trọ");
+  const valuePostType = ["Cho thuê trọ", "Tìm ở ghép"];
   //Post Type - End
   //Room Type - Start
-  const [roomType, setRoomType] = useState("");
+  const [roomType, setRoomType] = useState("Ký túc xá");
   const valueRoomType = [
     "Ký túc xá",
     "Phòng trọ cho thuê",
@@ -65,7 +66,7 @@ function Post(props) {
   const [numberPeoplePerRoom, setNumberPeoplePerRoom] = useState(2);
   //Number Person Per Room - End
   //Gender - Start
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState("Tất cả");
   const valueGender = ["Tất cả", "Nam", "Nữ"];
   //Gender - End
 
@@ -88,7 +89,10 @@ function Post(props) {
   const [cleanPrice, setCleanPrice] = useState("");
   //clean Price - End
   //Address -Start
-  const [chosenLocation, setChosenLocation] = useState([]);
+  const [chosenLocation, setChosenLocation] = useState([
+    "Huyện Thạch Thất",
+    "Xã Thạch Hoà",
+  ]);
   const [detailAddress, setDetailAddress] = useState("");
   //Address-end
   //Utilities - Start
@@ -138,7 +142,7 @@ function Post(props) {
   const [fileList, setFileList] = useState([]);
   //image -end
   //room area - start
-  const [area, setArea] = useState(0);
+  const [area, setArea] = useState(10);
   //room area -end
 
   const onFinish = (values) => {
@@ -184,9 +188,10 @@ function Post(props) {
         extra_info: description,
         motel_name: roomName,
         motel_address: [...chosenLocation],
-        strictTime: strictTime,
-        StrictTimeStart: strictTimeStart,
-        StrictTimeEnd: strictTimeEnd,
+        strict_time: strictTime,
+        strict_time_start: strictTimeStart,
+        strict_time_end: strictTimeEnd,
+        detail_address: detailAddress,
       }),
     };
     sendRequest(path, myInit).then((result) => {
@@ -261,6 +266,7 @@ function Post(props) {
         </Suspense>
       );
     }
+
     return (
       <Suspense fallback={<p>Loading...</p>}>
         <PostInformation

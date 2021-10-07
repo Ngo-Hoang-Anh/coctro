@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Input, Checkbox, Button, Slider } from "antd";
 import "../CommonInformation.css";
 
@@ -19,9 +19,28 @@ function DetailInformation(props) {
   } else {
     unitPrice = "";
   }
+  const [form] = Form.useForm();
+  const loadData = () => {
+    form.setFieldsValue({
+      deposit: props.deposit,
+      electricity: props.electricPrice,
+      water: props.waterPrice,
+      internet: props.internetPrice,
+      clean: props.cleanPrice,
+      detailAddress: props.detailAddress,
+    });
+  };
+  const onFinish = () => {
+    if (props.fileList.length !== 0) {
+      props.nextBack("post-information");
+    } else {
+      window.alert("Hãy upload ít nhất 1 ảnh");
+    }
+  };
+  useEffect(loadData, []);
   return (
     <div className="container-create-post">
-      <Form {...props.formItemLayout}>
+      <Form form={form} {...props.formItemLayout} onFinish={() => onFinish()}>
         <span id="span-title">Thông tin chi tiết:</span>
         <br />
         <br />
@@ -47,21 +66,50 @@ function DetailInformation(props) {
             }}
           />
         </Form.Item>
-        <Form.Item name="deposit" label="Giá tiền đặt cọc(đơn vị:VNĐ)">
+        <Form.Item
+          name="deposit"
+          label="Giá tiền đặt cọc(đơn vị:VNĐ)"
+          rules={[
+            {
+              required: true,
+              pattern: /^[1-9][0-9]*$/,
+              message: "Hãy nhập giá cọc hợp lệ",
+            },
+          ]}
+        >
           <Input
             value={props.deposit}
             defaultValue={props.deposit}
             onChange={(e) => props.setDeposit(e.target.value)}
           />
         </Form.Item>
-        <Form.Item label="Giá điện (đơn vị nghìn VNĐ/số)">
+        <Form.Item
+          label="Giá điện (đơn vị nghìn VNĐ/số)"
+          name="electricity"
+          rules={[
+            {
+              required: true,
+              pattern: /^[1-9][0-9]*$/,
+              message: "Hãy nhập giá điện hợp lệ",
+            },
+          ]}
+        >
           <Input
             value={props.electricPrice}
             defaultValue={props.electricPrice}
             onChange={(e) => props.setElectricPrice(e.target.value)}
           />
         </Form.Item>
-        <Form.Item label="Giá nước">
+        <Form.Item
+          label="Giá nước"
+          name="water"
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập giá nước",
+            },
+          ]}
+        >
           <Input
             placeholder="Vui lòng ghi rõ đơn vị"
             value={props.waterPrice}
@@ -69,7 +117,16 @@ function DetailInformation(props) {
             onChange={(e) => props.setWaterPrice(e.target.value)}
           />
         </Form.Item>
-        <Form.Item label="Giá internet/truyền hình cáp">
+        <Form.Item
+          label="Giá internet/truyền hình cáp"
+          name="internet"
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập giá internet",
+            },
+          ]}
+        >
           <Input
             placeholder="Vui lòng ghi rõ đơn vị"
             value={props.internetPrice}
@@ -77,7 +134,16 @@ function DetailInformation(props) {
             onChange={(e) => props.setInternetPrice(e.target.value)}
           />
         </Form.Item>
-        <Form.Item name="cleanCost" label="Chi phí vệ sinh">
+        <Form.Item
+          name="clean"
+          label="Chi phí vệ sinh"
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập chi phí vệ sinh",
+            },
+          ]}
+        >
           <Input
             placeholder="Vui lòng ghi rõ đơn vị"
             value={props.cleanPrice}
@@ -91,7 +157,16 @@ function DetailInformation(props) {
             setChosenLocation={props.setChosenLocation}
           />
         </Form.Item>
-        <Form.Item label="Địa chỉ chi tiết">
+        <Form.Item
+          label="Địa chỉ chi tiết"
+          name="detailAddress"
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập địa chỉ chi tiết",
+            },
+          ]}
+        >
           <Input
             placeholder="(Đường/số nhà)"
             value={props.detailAddress}
@@ -126,10 +201,7 @@ function DetailInformation(props) {
           >
             Quay lại
           </Button>
-          <Button
-            type="primary"
-            onClick={(e) => props.nextBack("post-information")}
-          >
+          <Button htmlType="submit" type="primary">
             Tiếp theo
           </Button>
         </div>

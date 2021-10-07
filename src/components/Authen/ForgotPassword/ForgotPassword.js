@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Input, Button, Modal } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { sendRequest } from "./../../../common/utility";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import "./ForgotPassword.css";
 import { ArrowLeftOutlined } from "@ant-design/icons";
@@ -10,10 +10,10 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 function ForgotPassword(props) {
   let history = useHistory();
   const [currentEmail, setCurrentEmail] = useState(null);
+  const [password, setPassword] = useState(null);
   const [option, setOption] = useState("inputEmail");
-
+  const [message, setMessage] = useState("");
   const sendToEmail = (values) => {
-    //TODO: validate
     const path = "/forgot-password";
     const myInit = {
       method: "POST",
@@ -21,14 +21,18 @@ function ForgotPassword(props) {
         email: values.email,
       }),
     };
-    setCurrentEmail(values.email);
     sendRequest(path, myInit).then((result) => {
       if (result.error == null) {
         setCurrentEmail(values.email);
+        setOption("inputNewPassword");
       } else {
-        window.alert("Error:" + result.error);
+        setMessage("Error:" + result.error);
       }
     });
+  };
+  const enterPassword = (values) => {
+    setPassword(values.password);
+    setOption("inputOTP");
   };
   const confirmOTP = (values) => {
     const path = "/change-password";
@@ -36,45 +40,27 @@ function ForgotPassword(props) {
       method: "POST",
       body: JSON.stringify({
         email: currentEmail,
-        newPassword: values.password,
+        newPassword: password,
         otp: values.otp,
       }),
     };
     sendRequest(path, myInit).then((result) => {
       if (result.error == null) {
-        window.alert("Password changed successfully");
+        setMessage("Password changed successfully");
         history.push("/login");
       } else {
-        window.alert("Error:" + result.error);
+        setMessage("Error:" + result.error);
       }
     });
   };
 
-  const gotoForm = (value) => {
-    Modal.info({
-      title: "Mã OTP đã được gửi về email " + { currentEmail },
-      onOk() {
-        setOption(value);
-      },
-    });
-  };
   const optionRender = () => {
-    console.log(option);
     if (option === "inputEmail") {
       return (
         <div className="container-forgot-password">
-          <Form
-            name="normal_login"
-            className="forgot-password-form"
-            onFinish={sendToEmail}
-          >
+          <Form name="normal_login" onFinish={(values) => sendToEmail(values)}>
             <Form.Item>
-              <div className="new-password-title">
-                <Link to="/login" />
-                <ArrowLeftOutlined id="back-icon" to="/login" />
-
-                <span id="new-password-title-content">Đặt Lại Mật Khẩu</span>
-              </div>
+              <span className="header-text">Đặt lại mật khẩu</span>
             </Form.Item>
             <Form.Item
               name="email"
@@ -86,81 +72,46 @@ function ForgotPassword(props) {
                 },
               ]}
             >
-              <div className="email">
-                <Input
-                  prefix={<UserOutlined className="site-form-item-icon" />}
-                  placeholder="Email"
-                />
-              </div>
+              <Input prefix={<UserOutlined />} placeholder="Email" />
             </Form.Item>
             <Form.Item>
-              <div className="forgot-button">
-                <Button type="primary" onClick={() => gotoForm("inputOTP")}>
-                  Tiếp theo
-                </Button>
-              </div>
+              <Button type="primary" htmlType="submit">
+                Tiếp theo
+              </Button>
             </Form.Item>
           </Form>
         </div>
       );
     }
-
-    if (option === "inputOTP") {
-      return (
-        <div className="container-forgot-password">
-          <Form name="confirmOTP" className="login-form" onFinish={confirmOTP}>
-            <Form.Item>
-              <div className="new-password-title">
-                <ArrowLeftOutlined id="back-icon" />{" "}
-                <span id="new-password-title-content">Nhập mã OTP</span>
-              </div>
-            </Form.Item>
-            <Form.Item
-              name="otp"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy nhập OTP!",
-                },
-              ]}
-            >
-              <div className="email">
-                <Input placeholder="OTP" />
-              </div>
-              Đề xuất gửi OTP sau 60s
-            </Form.Item>
-            <Form.Item>
-              <div className="forgot-button">
-                <Button
-                  type="primary"
-                  onClick={() => setOption("inputNewPassword")}
-                  className="login-form-button"
-                >
-                  Xác nhận OTP
-                </Button>
-              </div>
-            </Form.Item>
-          </Form>
-        </div>
-      );
-    }
-
     if (option === "inputNewPassword") {
       return (
         <div className="container-forgot-password">
-          <Form.Item>
-            <div className="new-password-title">
-              <ArrowLeftOutlined id="back-icon" />{" "}
-              <span id="new-password-title-content">Nhập mật khẩu mới</span>
-            </div>
-          </Form.Item>
-          <Form name="confirmOTP" className="login-form" onFinish={confirmOTP}>
+          <Form
+            name="confirmOTP"
+            className="login-form"
+            onFinish={(values) => enterPassword(values)}
+          >
+            <Button
+              type="link"
+              onClick={() => {
+                setOption("inputEmail");
+              }}
+            >
+              <ArrowLeftOutlined
+                style={{ fontSize: "30px", position: "absolute" }}
+              />
+            </Button>
+            <Form.Item className="new-password-title">
+              <span className="header-text">Nhập mật khẩu mới</span>
+            </Form.Item>
             <Form.Item
               name="password"
               rules={[
                 {
                   required: true,
-                  message: "Hãy nhập mật khẩu!",
+                  pattern: /[0-9A-Za-z]{6,30}$/,
+                  message:
+                    "Hãy nhập mật khẩu dài 6-30 ký tự và không chứa kí tự đặc biệt!",
                 },
               ]}
               hasFeedback
@@ -192,30 +143,82 @@ function ForgotPassword(props) {
               <Input.Password placeholder="Xác nhận mật khẩu" />
             </Form.Item>
             <Form.Item>
-              <div className="forgot-button">
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className="login-form-button"
-                >
-                  Xác nhận
-                </Button>
-              </div>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="login-form-button"
+              >
+                Xác nhận
+              </Button>
             </Form.Item>
-            {/* <Button
+          </Form>
+        </div>
+      );
+    }
+    if (option === "inputOTP") {
+      return (
+        <div className="container-forgot-password">
+          <Form
+            name="confirmOTP"
+            className="login-form"
+            onFinish={(values) => confirmOTP(values)}
+          >
+            <Button
               type="link"
-              className="login-form-button"
-              onClick={() => setCurrentEmail(null)}
+              onClick={() => {
+                setOption("inputNewPassword");
+              }}
             >
-              Nhập email khác
-            </Button> */}
+              <ArrowLeftOutlined
+                style={{ fontSize: "30px", position: "absolute" }}
+              />
+            </Button>
+            <Form.Item>
+              <span className="header-text">Nhập mã OTP</span>
+            </Form.Item>
+            <Form.Item
+              name="otp"
+              rules={[
+                {
+                  required: true,
+                  pattern: /[0-9]+$/,
+                  message: "Mã OTP chỉ bao gồm số",
+                },
+              ]}
+            >
+              <Input placeholder="OTP" />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="login-form-button"
+              >
+                Xác nhận OTP
+              </Button>
+            </Form.Item>
           </Form>
         </div>
       );
     }
   };
 
-  return <div className="container">{optionRender()}</div>;
+  return (
+    <>
+      <div className="container">{optionRender()}</div>
+      <Modal
+        visible={message !== ""}
+        title={message}
+        footer={[
+          <Button type="default" onClick={() => setMessage("")}>
+            Close
+          </Button>,
+        ]}
+      >
+        <h1>{message}</h1>
+      </Modal>
+    </>
+  );
 }
 
 export default ForgotPassword;

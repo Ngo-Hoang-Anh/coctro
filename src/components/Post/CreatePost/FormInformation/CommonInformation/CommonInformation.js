@@ -1,26 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../CommonInformation.css";
 
 import { Form, Radio, InputNumber, Button, Input } from "antd";
 
 function CommonInformation(props) {
+  const onFinish = () => {
+    props.nextBack("detail-information");
+  };
+  const [form] = Form.useForm();
+  const loadData = () => {
+    form.setFieldsValue({
+      roomName: props.roomName,
+      numberRoomAvailable: props.numberRoomAvailable,
+      numberPeoplePerRoom: props.numberPeoplePerRoom,
+      area: props.area,
+      gender: props.gender,
+    });
+  };
+  useEffect(loadData, []);
   return (
     <div className="container-create-post">
-      <Form {...props.formItemLayout}>
+      <Form form={form} {...props.formItemLayout} onFinish={(e) => onFinish()}>
         <span id="span-title">Thông tin chung:</span>
         <br />
         <br />
         <br />
-        <Form.Item
-          name="postType"
-          label="Loại hình"
-          rules={[
-            {
-              required: true,
-              message: "Hãy chọn loại hình!",
-            },
-          ]}
-        >
+        <Form.Item name="postType" label="Loại hình">
           <Radio.Group
             options={props.valuePostType}
             onChange={(e) => props.setPostType(e.target.value)}
@@ -28,16 +33,7 @@ function CommonInformation(props) {
             defaultValue={props.postType}
           />
         </Form.Item>
-        <Form.Item
-          name="roomType"
-          label="Loại phòng"
-          rules={[
-            {
-              required: true,
-              message: "Hãy chọn loại phòng!",
-            },
-          ]}
-        >
+        <Form.Item name="roomType" label="Loại phòng">
           <Radio.Group
             options={props.valueRoomType}
             onChange={(e) => props.setRoomType(e.target.value)}
@@ -46,7 +42,7 @@ function CommonInformation(props) {
           />
         </Form.Item>
         <Form.Item
-          name="name"
+          name="roomName"
           label="Tên trọ:"
           rules={[
             {
@@ -58,7 +54,9 @@ function CommonInformation(props) {
           <Input
             value={props.roomName}
             defaultValue={props.roomName}
-            onChange={(e) => props.setRoomName(e.target.value)}
+            onChange={(e) => {
+              props.setRoomName(e.target.value);
+            }}
           />
         </Form.Item>
         <Form.Item
@@ -67,7 +65,8 @@ function CommonInformation(props) {
           rules={[
             {
               required: true,
-              message: "",
+              pattern: /^[0-9]*$/,
+              message: "Hãy chọn số phòng trống",
             },
           ]}
         >
@@ -76,6 +75,7 @@ function CommonInformation(props) {
             value={props.numberRoomAvailable}
             defaultValue={props.numberRoomAvailable}
             onChange={(value) => props.setNumberRoomAvailable(value)}
+            keyboard={false}
           />
         </Form.Item>
         <Form.Item
@@ -84,7 +84,8 @@ function CommonInformation(props) {
           rules={[
             {
               required: true,
-              message: "",
+              pattern: /^[0-9]*$/,
+              message: "Hãy chọn số người 1 phòng",
             },
           ]}
         >
@@ -93,6 +94,7 @@ function CommonInformation(props) {
             value={props.numberPeoplePerRoom}
             defaultValue={props.numberPeoplePerRoom}
             onChange={(value) => props.setNumberPeoplePerRoom(value)}
+            keyboard={false}
           />
         </Form.Item>
         <Form.Item
@@ -101,7 +103,8 @@ function CommonInformation(props) {
           rules={[
             {
               required: true,
-              message: "Hãy nhập diện tích phòng",
+              pattern: /^[1-9][0-9]*$/,
+              message: "Hãy nhập diện tích phòng hợp lệ",
             },
           ]}
         >
@@ -111,16 +114,7 @@ function CommonInformation(props) {
             onChange={(e) => props.setArea(e.target.value)}
           />
         </Form.Item>
-        <Form.Item
-          name="gender"
-          label="Giới tính"
-          rules={[
-            {
-              required: true,
-              message: "Hãy chọn giới tính!",
-            },
-          ]}
-        >
+        <Form.Item name="gender" label="Giới tính">
           <Radio.Group
             options={props.valueGender}
             onChange={(e) => props.setGender(e.target.value)}
@@ -131,10 +125,7 @@ function CommonInformation(props) {
 
         <br />
         <div id="button">
-          <Button
-            type="primary"
-            onClick={(e) => props.nextBack("detail-information")}
-          >
+          <Button htmlType="submit" type="primary">
             Tiếp theo
           </Button>
         </div>

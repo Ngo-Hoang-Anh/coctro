@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Login.css";
 import { useHistory } from "react-router-dom";
 
-import { Form, Input, Button, Image } from "antd";
+import { Form, Input, Button, Image, Modal } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { sendRequest } from "../../../common/utility";
 
 const Login = (props) => {
+  const [message, setMessage] = useState("");
   let history = useHistory();
   function onFinish(values) {
     const path = "/login";
@@ -17,14 +18,13 @@ const Login = (props) => {
         password: values.password,
       }),
     };
-
     sendRequest(path, myInit).then((result) => {
       if (result.error == null) {
         window.localStorage.setItem("token", result.token);
         props.setToken(result.token);
         history.push("/home");
       } else {
-        window.alert(result.error);
+        setMessage(result.error);
       }
     });
     //set time out for testing purpose
@@ -112,6 +112,17 @@ const Login = (props) => {
           </Form.Item>
         </Form>
       </div>
+      <Modal
+        visible={message !== ""}
+        title={message}
+        footer={[
+          <Button type="default" onClick={() => setMessage("")}>
+            Close
+          </Button>,
+        ]}
+      >
+        <h1>{message}</h1>
+      </Modal>
     </div>
   );
 };

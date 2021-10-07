@@ -3,63 +3,55 @@ $font-family: "Bookman";
 $margin-left: 50px;
 
 .container-register {
+  display: flex;
+  min-height: 66vh;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: #fe762c;
+  font-family: $font-family;
+  margin-top: 10px;
+  text-align: center;
+
+  .container-form-register {
+    width: 100%;
+    max-width: 400px;
+    background-color: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0px 2px 64px rgba(0, 0, 0, 0.2);
     display: flex;
-    min-height: 66vh;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    background: #fe762c;
-    font-family: $font-family;
-    margin-top: 10px;
+  }
+
+  #logo {
+    width: $width;
+    margin-right: 200px;
+  }
+
+  .email-register,
+  .fullname,
+  .phone,
+  .password,
+  .confirm-password,
+  .button-register {
+    width: 300px;
     text-align: center;
+    font-size: 18px;
+    margin-left: 47px;
+  }
 
-    .container-form-register {
-        width: 100%;
-        max-width: 800px;
-        background-color: #fff;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0px 2px 64px rgba(0, 0, 0, 0.2);
-        display: flex;
-    }
+  .change-to-login {
+    text-align: center;
+  }
 
-    #logo {
-        width: $width;
-        margin-right: 200px;
-    }
+  .login-label {
+    margin-top: 30px;
+    font-size: 30px;
+    text-align: center;
+    margin-left: 30px;
+  }
 
-    .email-register, .fullname, .phone, .password, .confirm-password, .button-register {
-        width: 300px;
-        text-align: center;
-        font-size: 18px;
-        margin-left: 47px;
-    }
-
-    .change-to-login {
-        text-align: center;
-    }
-
-    
-
-    .login-label {
-        margin-top: 30px;
-        font-size: 30px;
-        text-align: center;
-        margin-left: 30px;
-    }
-
-    
-
-    .email-register {
-        text-align: center;
-    }
-}
-
-.register-rule {
-    width: 400px;
-    // //justify-content: center;
-    // text-align: left;
-     padding-left: 20px;
-     border-right: 1px dashed green;
-    text-align: left;
+  .email-register {
+    text-align: center;
+  }
 }
